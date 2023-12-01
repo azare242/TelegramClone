@@ -1,18 +1,18 @@
 
-import {Route, Routes, useParams} from 'react-router-dom'
+import {Route, Routes, useParams, useNavigate} from 'react-router-dom'
 import {Button} from '@mui/material'
 import React from 'react';
 
 
 function Child() {
   const {id} = useParams();
-  const [underline, setUnderline] = React.useState<string>('underline')
+  const navigate = useNavigate();
+  // navigate('/1');
   return (
     <>
-    <h1 className={`text-3xl font-bold ${underline}`}>Hello world! {id}</h1>
+    <h1 className={`text-3xl font-bold underline`}>Hello world! {id}</h1>
     <Button onClick={() => {
-      if (underline === "underline") setUnderline("")
-      else setUnderline("underline");
+      navigate(`/${parseInt(id ? id : '0') + 1}`)
     }}
     variant='contained'
     >CLICK ME</Button>
