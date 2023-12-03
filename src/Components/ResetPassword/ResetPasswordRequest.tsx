@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  TextField,
-  Button,
-  Snackbar,
-  Alert,
-  Checkbox,
-  FormControlLabel,
-} from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-const ResetPassword = () => {
-  const navigate = useNavigate();
+import { TextField, Button, Snackbar, Alert } from "@mui/material";
+import { Link } from "react-router-dom";
+const ResetPasswordRequest = () => {
   const [success, setSuccess] = React.useState<number>(-1);
 
   const closeSnackBarHandler = () => {
@@ -19,30 +11,17 @@ const ResetPassword = () => {
         break;
       case 1:
         setSuccess(-1);
-        navigate("/login");
         break;
       default:
         setSuccess(-1);
         break;
     }
   };
-  const [showPassword, setShowPassword] = React.useState<boolean>(false);
-
   return (
     <div
       className={`flex flex-col items-center justify-between m-60 p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
     >
-      <TextField type={showPassword ? "text" : "password"} label={`Password`} />
-      <TextField
-        type={showPassword ? "text" : "password"}
-        label={`Confirm Password`}
-      />
-      <FormControlLabel
-        control={
-          <Checkbox onChange={(e) => setShowPassword(e.target.checked)} />
-        }
-        label="Show Password"
-      />
+      <TextField type={`text`} label={`Email`} />
       <Button
         variant={`contained`}
         style={{ width: "100%" }}
@@ -50,6 +29,17 @@ const ResetPassword = () => {
       >
         Submit
       </Button>
+      <div
+        className={`flex flex-row gap-2 w-[100%] items-center justify-between`}
+      >
+        <Link to={`/login`}>
+          <Button variant={`text`}>Login</Button>
+        </Link>
+        <Link to={`/signup`}>
+          <Button variant={`text`}>Signup</Button>
+        </Link>
+      </div>
+
       <Snackbar
         open={success !== -1}
         autoHideDuration={5000}
@@ -59,8 +49,8 @@ const ResetPassword = () => {
         {
           <Alert severity={success === 1 ? "success" : "error"}>
             {success === 1
-              ? "Resetpassword Successfully, you will navigate to login page"
-              : "Error In password"}
+              ? "Resetpassword Successfully, check your email"
+              : "Can not find user with this email"}
           </Alert>
         }
       </Snackbar>
@@ -68,4 +58,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordRequest;

@@ -1,6 +1,7 @@
 import Login from "../../Components/Login/Login";
 import Register from "../../Components/Register/Register";
 import ResetPassword from "../../Components/ResetPassword/ResetPassword";
+import ResetPasswordRequest from "../../Components/ResetPassword/ResetPasswordRequest";
 import Home from "../../Pages/Home";
 
 export type AppRouteType = {
@@ -26,8 +27,13 @@ export const routes: AppRouteType[] = [
     element: <Register />,
   },
   {
-    path: "resetpassword",
+    path: "requestresetpassword",
     name: "",
+    element: <ResetPasswordRequest />,
+  },
+  {
+    path: "resetpassword",
+    name: "Reset Password",
     element: <ResetPassword />,
   },
 ];
