@@ -31,7 +31,7 @@ const Login = () => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-between m-60 p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
+      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
     >
       <TextField label={`Username`} color={`primary`}></TextField>
       <TextField
