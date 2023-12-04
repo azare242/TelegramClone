@@ -1,5 +1,5 @@
 import { Alert, Snackbar } from "@mui/material";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {Button} from '@mui/material'
 import TEL from '../assets/icons8-telegram-96.png'
 const Home = () => {

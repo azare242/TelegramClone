@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import {
   TextField,
   FormControlLabel,
@@ -41,6 +41,7 @@ const Register = () => {
 
   const onSubmit: SubmitHandler<RegisterFormValues> = (data: RegisterFormValues) => {
     
+    console.log(data)
     setSuccess(1);
   };
 

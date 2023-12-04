@@ -1,11 +1,10 @@
 export interface RegisterFormValues {
-    username: string;
-    email: string;
-    phoneNumber: string;
-    password: string;
-    confirmPassword: string;
-  }
-
+  username: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  confirmPassword: string;
+}
 
 export interface LoginFormValues {
   username: string;
@@ -13,7 +12,6 @@ export interface LoginFormValues {
 }
 
 export interface ResetPasswordValues {
-    password: string;
-    confirmPassword: string;
-  }
-  
+  password: string;
+  confirmPassword: string;
+}

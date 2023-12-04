@@ -42,6 +42,7 @@ const LoginForm = () => {
     // Add your login logic here
     // For example, you can send a request to your authentication API
     // and handle success or error accordingly
+    console.log(data)
     setSuccess(1);
   };
 
