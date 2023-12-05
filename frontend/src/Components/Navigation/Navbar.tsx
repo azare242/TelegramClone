@@ -1,7 +1,8 @@
-import { AppBar, Button, Toolbar, Typography } from "@mui/material"
+import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material"
 import NavItem from "./NavItem"
 import { Link } from "react-router-dom"
 import TEL from '../../assets/icons8-telegram-96.png'
+import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 const Navbar = () => {
   return (
     <>
@@ -14,7 +15,9 @@ const Navbar = () => {
                 <NavItem path="/a/" name="All"/>
                 <NavItem path="/b/c" name="Privates"/>
                 <NavItem path="/d/c" name="Groups"/>
-                <Button variant={`contained`} color={`error`} sx={{marginLeft: "auto"}}>USER</Button>
+                <IconButton sx={{marginLeft: "auto"}}>
+                  <AccountCircleTwoToneIcon />
+                </IconButton>
             </Toolbar>
         </AppBar>
     </>

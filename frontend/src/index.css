@@ -27,7 +27,7 @@ body {
   height: 100%;
   /* Add your background pattern here */
   --s: 50px; /* control the size */
-  --c1: #1eaaee;
+  --c1: #2196f3;
   --c2: #171717;
 
   --c: #0000 71%, var(--c1) 0 79%, #0000 0;

@@ -8,7 +8,7 @@ const NavItem = ({path, name}: PropsInfo) => {
   return (
     <>
     <Link to={path}>
-        <Button variant={`contained`} color={`success`}>
+        <Button variant={`contained`} color={`secondary`}>
             {name}
         </Button>
     </Link>
