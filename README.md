@@ -6,3 +6,29 @@ Internet Engineering Fall 2023 Project
 > 
 > [Mohammad Sadegh Mohammadi](https://github.com/sadegh-msm)
 > More Focus on Backend
+
+
+
+
+
+**RUN PROJECT**
+```bash
+cd deployment
+docker compose up
+```
+
+or
+
+ - Frontend
+
+	```bash
+	cd frontend
+	npm install
+	npm run build
+	npm run preview
+	```
+- Backend
+	```bash
+	cd backend
+	<TBD>
+	```
