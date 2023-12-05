@@ -10,7 +10,7 @@ export type AppRouteType = {
   element: JSX.Element;
 };
 
-export const routes: AppRouteType[] = [
+export const publicRoutes: AppRouteType[] = [
   {
     path: "",
     name: "Home",
@@ -37,3 +37,6 @@ export const routes: AppRouteType[] = [
     element: <ResetPassword />,
   },
 ];
+
+
+
