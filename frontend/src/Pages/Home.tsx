@@ -28,10 +28,10 @@ const HomePage = () => {
     </div>
     <div className="w-[75%] flex items-center justify-center gap-5"> 
       <Link to="/login">
-        <Button variant="contained"> {languageConfig.login} </Button>
+        <Button variant="contained" size={`large`} sx={{width: "10rem"}}> {languageConfig.login} </Button>
       </Link>
       <Link to="/signup">
-        <Button variant="contained"> {languageConfig.signup} </Button>
+        <Button variant="contained" size={`large`} sx={{width: "10rem"}}> {languageConfig.signup} </Button>
       </Link>
     </div>
 
