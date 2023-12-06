@@ -50,7 +50,7 @@ export interface LanguageConfig {
   }
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
-  const [language, setLanguage] = React.useState<"FA" | "EN">("FA");
+  const [language, setLanguage] = React.useState<"FA" | "EN">("EN");
   const FA: LanguageConfig = {
     login: "ورود",
     signup: "ثبت نام",

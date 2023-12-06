@@ -19,11 +19,11 @@ const HomePage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-[30rem] w-[45rem] mt-[5rem] border-2  bg-slate-700 rounded-2xl border-blue-500 gap-10">
     <div className="w-[15rem] flex flex-col items-center justify-center text-center gap-4">
-        <img src={TEL} alt='app'/>  
+        <img src={TEL} alt='app' className="rounded-2xl hover:shadow-lg hover:shadow-slate-1000 hover:bg-slate-100"/>  
         <p>
           {languageConfig.welcome.wlto}
           <br/>
-          {languageConfig.welcome.by}<br/> {languageConfig.welcome.green} <br/>{languageConfig.welcome.and}<br/> {languageConfig.welcome.sdq}
+          {languageConfig.welcome.by}<br/> <span className="hover:text-green-500">{languageConfig.welcome.green}</span> <br/>{languageConfig.welcome.and}<br/> {languageConfig.welcome.sdq}
           </p>
     </div>
     <div className="w-[75%] flex items-center justify-center gap-5"> 
