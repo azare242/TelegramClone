@@ -4,8 +4,15 @@ import {Button} from '@mui/material'
 import TEL from '../assets/icons8-telegram-96.png'
 import { useAPI } from "../Actions/API/useAPI";
 import React from "react";
+import { LanguageConfig } from "../Config/Languages/LanguageProvider";
+import { useLanguage } from "../Config/Languages/useLanguage";
 
 const HomePage = () => {
+  const {language, FA, EN} = useLanguage();
+  const languageConfig = React.useMemo<LanguageConfig>(() : LanguageConfig  => {
+    if (language === "FA") return FA as LanguageConfig
+    else return EN as LanguageConfig
+  }, [EN, FA, language]);
   const [searchParams] = useSearchParams();
   const login_error: boolean =
     searchParams.get("login_error") === "1" ? true : false;
@@ -14,17 +21,17 @@ const HomePage = () => {
     <div className="w-[15rem] flex flex-col items-center justify-center text-center gap-4">
         <img src={TEL} alt='app'/>  
         <p>
-          welcome to mytel
+          {languageConfig.welcome.wlto}
           <br/>
-          by<br/> alireza zare <br/>&<br/> sadegh mohammadi
+          {languageConfig.welcome.by}<br/> {languageConfig.welcome.green} <br/>{languageConfig.welcome.and}<br/> {languageConfig.welcome.sdq}
           </p>
     </div>
     <div className="w-[75%] flex items-center justify-center gap-5"> 
       <Link to="/login">
-        <Button variant="contained"> Login </Button>
+        <Button variant="contained"> {languageConfig.login} </Button>
       </Link>
       <Link to="/signup">
-        <Button variant="contained"> Signup </Button>
+        <Button variant="contained"> {languageConfig.signup} </Button>
       </Link>
     </div>
 
@@ -34,7 +41,7 @@ const HomePage = () => {
       anchorOrigin={{ vertical: "top", horizontal: "center" }}
     >
       <Alert severity={`error`} sx={{ width: "100%" }}>
-        Please Login
+        {languageConfig.snackbars.pleaseLogin}
       </Alert>
     </Snackbar>
   </div>

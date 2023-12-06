@@ -1,9 +1,16 @@
 import React from "react";
 import { TextField, Button, Snackbar, Alert } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useLanguage } from "../../Config/Languages/useLanguage";
+import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 const ResetPasswordRequest = () => {
   const [success, setSuccess] = React.useState<number>(-1);
   const [email, setEmail] = React.useState<string>("");
+  const {language, FA, EN} = useLanguage();
+  const languageConfig = React.useMemo<LanguageConfig>(() : LanguageConfig  => {
+    if (language === "FA") return FA as LanguageConfig
+    else return EN as LanguageConfig
+  }, [EN, FA, language]);
   const handleRequest = (needReturn: boolean = false) => {
     const emailPattern = /^\S+@\S+$/i;
     const check = emailPattern.test(email)
@@ -29,23 +36,23 @@ const ResetPasswordRequest = () => {
     <div
       className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
     >
-      <TextField type={`text`} label={`Email`} defaultValue={email} onChange={(e) => setEmail(e.target.value)}/>
+      <TextField type={`text`} label={languageConfig.forms.email} defaultValue={email} onChange={(e) => setEmail(e.target.value)}/>
       
       <Button
         variant={`contained`}
         style={{ width: "100%" }}
         onClick={() => handleRequest()}
       >
-        Submit
+        {languageConfig.submit}
       </Button>
       <div
         className={`flex flex-row gap-2 w-[100%] items-center justify-between`}
       >
         <Link to={`/login`}>
-          <Button variant={`text`}>Login</Button>
+          <Button variant={`text`}>{languageConfig.login}</Button>
         </Link>
         <Link to={`/signup`}>
-          <Button variant={`text`}>Signup</Button>
+          <Button variant={`text`}>{languageConfig.signup}</Button>
         </Link>
       </div>
 
@@ -58,8 +65,8 @@ const ResetPasswordRequest = () => {
         {
           <Alert severity={success === 1 ? "success" : "error"}>
             {success === 1
-              ? "Resetpassword Successfully, check your email"
-              : "Invalid Email. "}
+              ? languageConfig.snackbars.requestResetPasswordSuccess
+              : languageConfig.snackbars.requestResetPasswordError}
           </Alert>
         }
       </Snackbar>

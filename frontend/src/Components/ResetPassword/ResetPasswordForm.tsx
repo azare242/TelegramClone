@@ -4,11 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { ResetPasswordValues } from "../../Types/inedx";
+import { useLanguage } from "../../Config/Languages/useLanguage";
+import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 const ResetPassword = () => {
   const navigate = useNavigate();
   const [success, setSuccess] = React.useState<number>(-1);
   const { register, handleSubmit, watch, formState: { errors } } = useForm<ResetPasswordValues>();
-
+  const {language, FA, EN} = useLanguage();
+  const languageConfig = React.useMemo<LanguageConfig>(() : LanguageConfig  => {
+    if (language === "FA") return FA as LanguageConfig
+    else return EN as LanguageConfig
+  }, [EN, FA, language]);
   const closeSnackBarHandler = () => {
     switch (success) {
       case 0:
@@ -35,27 +41,27 @@ const ResetPassword = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <TextField
           type={showPassword ? "text" : "password"}
-          label={`Password`}
-          {...register("password", { required: "Password is required" })}
+          label={languageConfig.forms.password}
+          {...register("password", { required: languageConfig.forms.errorMessages.password })}
           error={!!errors.password}
           helperText={errors.password?.message}
         />
         <TextField
           type={showPassword ? "text" : "password"}
-          label={`Confirm Password`}
+          label={languageConfig.forms.confirmPassword}
           {...register("confirmPassword", {
-            required: "Confirm Password is required",
-            validate: (value) => value === watch("password", "") || "Passwords do not match",
+            required: languageConfig.forms.errorMessages.confirmPassword,
+            validate: (value) => value === watch("password", "") || languageConfig.forms.errorMessages.passwordMissMatch,
           })}
           error={!!errors.confirmPassword}
-          helperText={errors.confirmPassword?.message}
+          helperText={errors.confirmPassword ? languageConfig.forms.errorMessages.passwordMissMatch : ""}
         />
         <FormControlLabel
           control={<Checkbox onChange={(e) => setShowPassword(e.target.checked)} />}
-          label="Show Password"
+          label={languageConfig.showPassword}
         />
         <Button variant={`contained`} style={{ width: "100%" }} type="submit">
-          Submit
+          {languageConfig.submit}
         </Button>
       </form>
       <Snackbar
@@ -67,8 +73,8 @@ const ResetPassword = () => {
         {
           <Alert severity={success === 1 ? "success" : "error"}>
             {success === 1
-              ? "Reset password Successfully, you will navigate to login page"
-              : "Error in password"}
+              ? languageConfig.snackbars.resetPasswordSuccess
+              : languageConfig.snackbars.registerError}
           </Alert>
         }
       </Snackbar>

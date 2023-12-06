@@ -3,14 +3,21 @@ import AppRoutes from "./Config/Routes/AppRoutes";
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "./Theme/Theme";
 import { ApiProvider } from "./Actions/API/ApiProvider";
+import { LanguageProvider } from "./Config/Languages/LanguageProvider";
 function App() {
+
   return (
-    <ThemeProvider theme={theme}>
-      <ApiProvider>
-        <Navbar />
-        <AppRoutes />
-      </ApiProvider>
-    </ThemeProvider>
+
+      <LanguageProvider>
+        <ThemeProvider theme={theme}>
+          <ApiProvider>
+
+            <Navbar />
+            <AppRoutes />
+
+          </ApiProvider>
+        </ThemeProvider>
+      </LanguageProvider>
   );
 }
 
