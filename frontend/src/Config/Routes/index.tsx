@@ -3,6 +3,7 @@ import Register from "../../Pages/Register";
 import ResetPassword from "../../Pages/ResetPassword";
 import ResetPasswordRequest from "../../Pages/ResetPasswordRequest";
 import Home from "../../Pages/Home";
+import Massenger from "../../Layouts/Massenger";
 
 export type AppRouteType = {
   path: string;
@@ -36,6 +37,13 @@ export const publicRoutes: AppRouteType[] = [
     name: "Reset Password",
     element: <ResetPassword />,
   },
+  {
+    path: "ppllss",
+    name: "success",
+    element: <Massenger>
+      
+    </Massenger>
+  }
 ];
 
 
