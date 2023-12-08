@@ -40,11 +40,6 @@ export const publicRoutes: AppRouteType[] = [
   {
     path: "ppllss",
     name: "success",
-    element: <Massenger>
-      
-    </Massenger>
-  }
+    element: <Massenger><h1>Coming soon</h1></Massenger>,
+  },
 ];
-
-
-

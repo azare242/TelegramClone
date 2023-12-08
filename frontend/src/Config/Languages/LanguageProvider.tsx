@@ -141,7 +141,7 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
         email: "Email is require",
         phone: "Phone Number is required",
         passwordMissMatch: "Password and confirm miss match",
-        emailMissMatch: "enter a valid email"
+        emailMissMatch: "Enter a valid email"
       }
     },
     submit: "Submit"

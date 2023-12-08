@@ -6,18 +6,17 @@ import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 const ResetPasswordRequest = () => {
   const [success, setSuccess] = React.useState<number>(-1);
   const [email, setEmail] = React.useState<string>("");
-  const {language, FA, EN} = useLanguage();
-  const languageConfig = React.useMemo<LanguageConfig>(() : LanguageConfig  => {
-    if (language === "FA") return FA as LanguageConfig
-    else return EN as LanguageConfig
+  const { language, FA, EN } = useLanguage();
+  const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
+    if (language === "FA") return FA as LanguageConfig;
+    else return EN as LanguageConfig;
   }, [EN, FA, language]);
   const handleRequest = (needReturn: boolean = false) => {
     const emailPattern = /^\S+@\S+$/i;
-    const check = emailPattern.test(email)
+    const check = emailPattern.test(email);
     if (needReturn) return check;
-    else setSuccess(check ? 1 : 0)
-    
-  }
+    else setSuccess(check ? 1 : 0);
+  };
   const closeSnackBarHandler = () => {
     switch (success) {
       case 0:
@@ -36,8 +35,13 @@ const ResetPasswordRequest = () => {
     <div
       className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
     >
-      <TextField type={`text`} label={languageConfig.forms.email} defaultValue={email} onChange={(e) => setEmail(e.target.value)}/>
-      
+      <TextField
+        type={`text`}
+        label={languageConfig.forms.email}
+        defaultValue={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
       <Button
         variant={`contained`}
         style={{ width: "100%" }}
