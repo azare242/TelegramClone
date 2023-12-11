@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
-import { BottomNavigation } from '@mui/material';
 const GithubLink = () => {
 
   const { language, FA, EN } = useLanguage();

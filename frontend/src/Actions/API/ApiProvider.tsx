@@ -3,7 +3,7 @@ interface PropsInfo {
   children: React.ReactNode;
 }
 export const ApiProvider = ({ children }: PropsInfo) => {
-  const [jsonWebToken, setJsonWebToken] = React.useState<string | null>(null);
+  const [jsonWebToken,] = React.useState<string | null>(null);
 
   const context = {
     jsonWebToken,
