@@ -3,6 +3,7 @@ interface PropsInfo {
   children: React.ReactNode;
 }
 export interface LanguageConfig {
+  hello: string;
   login: string;
   signup: string;
   forgotPassword: string;
@@ -27,7 +28,7 @@ export interface LanguageConfig {
     loginError: string,
     registerSuccess: string,
     registerError: string,
-  },
+  };
   forms: {
     username: string,
     password: string,
@@ -41,13 +42,15 @@ export interface LanguageConfig {
       phone: string,
       passwordMissMatch: string,
     }
-  },
-  notFound: string,
-  fourOFour: string
+  };
+  notFound: string;
+  fourOFour: string;
+
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
   const [language, setLanguage] = React.useState<"FA" | "EN">("FA");
   const FA: LanguageConfig = {
+    hello: "سلام!",
     login: "ورود",
     signup: "ثبت نام",
     forgotPassword: "فراموشی رمزعبور",
@@ -92,6 +95,7 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
   };
 
   const EN: LanguageConfig = {
+    hello: "Hi!",
     login: "login",
     signup: "Register",
     forgotPassword: "Forgot Password",

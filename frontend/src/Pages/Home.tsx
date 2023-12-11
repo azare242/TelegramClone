@@ -6,6 +6,7 @@ import { useAPI } from "../Actions/API/useAPI";
 import React from "react";
 import { LanguageConfig } from "../Config/Languages/LanguageProvider";
 import { useLanguage } from "../Config/Languages/useLanguage";
+import GithubLink from "../Components/Github/GithubLink";
 
 const HomePage = () => {
   const {language, FA, EN} = useLanguage();
@@ -34,7 +35,9 @@ const HomePage = () => {
         <Button variant="contained" size={`large`} sx={{width: "10rem"}}> {languageConfig.signup} </Button>
       </Link>
     </div>
-
+    <div className="mt-5">
+      <GithubLink/>
+    </div>
     <Snackbar
       open={login_error}
       autoHideDuration={5000}

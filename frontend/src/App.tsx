@@ -15,6 +15,7 @@ function App() {
             <Navbar />
             <AppRoutes />
 
+
           </ApiProvider>
         </ThemeProvider>
       </LanguageProvider>
