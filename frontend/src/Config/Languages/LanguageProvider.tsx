@@ -27,30 +27,26 @@ export interface LanguageConfig {
     loginError: string,
     registerSuccess: string,
     registerError: string,
-    resetPasswordSuccess: string,
-    resetPasswordError: string,
-    requestResetPasswordSuccess: string,
-    requestResetPasswordError: string,
   },
   forms: {
     username: string,
     password: string,
     confirmPassword: string,
-    email: string,
+
     phone: string,
     errorMessages: {
       username: string,
       password: string,
       confirmPassword: string,
-      email: string,
       phone: string,
       passwordMissMatch: string,
-      emailMissMatch: string
     }
-  }
+  },
+  notFound: string,
+  fourOFour: string
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
-  const [language, setLanguage] = React.useState<"FA" | "EN">("EN");
+  const [language, setLanguage] = React.useState<"FA" | "EN">("FA");
   const FA: LanguageConfig = {
     login: "ورود",
     signup: "ثبت نام",
@@ -75,28 +71,24 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
       loginError: "اطلاعات نادرست است",
       registerSuccess: "ثبت نام موفقیت آمیز بود. در حال انقال به صفحه ورود",
       registerError: "خطا در ثبت نام",
-      resetPasswordSuccess: "بازنشانی رمزعبور موفقیت آمیزبود، درحال انتقال به صفحه ورود",
-      resetPasswordError: "خطا در بازنشانی رمزعبور",
-      requestResetPasswordSuccess: "لینک بازنشانی به پست الکترونیکی شما ارسال شد",
-      requestResetPasswordError: "خطا در درخواست."
     },
     forms: {
       username: "نام کاربری",
       password: "رمز عبور",
       confirmPassword: "تایید رمز عبور",
-      email: "پست الکترونیکی",
+
       phone: "شماره تلفن",
       errorMessages: {
         username: "نام کاربری را وارد کنید",
         password: "رمز عبور را وارد کنید",
         confirmPassword: "رمز عبور را تایید کنید",
-        email: "پست الکترونیکی را وارد کنید",
         phone: "شماره تلفن را وارد کنید.",
         passwordMissMatch: "رمز عبود و تایید آن مطابقت ندارند",
-        emailMissMatch: "ایمیل معتبر وارد کنید."
       }
     },
-    submit: "ثبت"
+    submit: "ثبت",
+    notFound: "پیدا نشد",
+    fourOFour: "۴۰۴"
   };
 
   const EN: LanguageConfig = {
@@ -123,28 +115,26 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
       loginError: "Information is incorrect",
       registerSuccess: "Register Successfully, you will navigate to the login page",
       registerError: "Error in Registration",
-      resetPasswordSuccess: "Password Reset Successfully, you will navigate to the login page",
-      resetPasswordError: "Error in Password Reset",
-      requestResetPasswordSuccess: "Resetpassword Successfully, check your email",
-      requestResetPasswordError: "Error in Reset Password"
+
     },
     forms: {
       username: "Username",
       password: "Password",
       confirmPassword: "Confirm Password",
-      email: "Email",
+
       phone: "Phone Number",
       errorMessages: {
         username: "Username is required",
         password: "Password is required",
         confirmPassword: "Confirm Password is required",
-        email: "Email is require",
+
         phone: "Phone Number is required",
         passwordMissMatch: "Password and confirm miss match",
-        emailMissMatch: "Enter a valid email"
       }
     },
-    submit: "Submit"
+    submit: "Submit",
+    notFound: "Not Found",
+    fourOFour: "404"
   };
   const context = {
     language,

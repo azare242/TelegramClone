@@ -28,16 +28,6 @@ export const publicRoutes: AppRouteType[] = [
     element: <Register />,
   },
   {
-    path: "requestresetpassword",
-    name: "",
-    element: <ResetPasswordRequest />,
-  },
-  {
-    path: "resetpassword",
-    name: "Reset Password",
-    element: <ResetPassword />,
-  },
-  {
     path: "ppllss",
     name: "success",
     element: <Massenger><h1>Coming soon</h1></Massenger>,

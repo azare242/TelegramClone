@@ -54,7 +54,7 @@ const LoginForm = () => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
+      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90`}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <TextField
@@ -81,11 +81,6 @@ const LoginForm = () => {
           }
           label={languageConfig.showPassword}
         />
-        <Link to={`/requestresetpassword`}>
-          <Button variant={`outlined`} className="w-full">
-            {languageConfig.forgotPassword}
-          </Button>
-        </Link>
         <Button variant={`contained`} type="submit">
           {languageConfig.login}
         </Button>

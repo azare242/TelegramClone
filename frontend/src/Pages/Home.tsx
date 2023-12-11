@@ -17,7 +17,7 @@ const HomePage = () => {
   const login_error: boolean =
     searchParams.get("login_error") === "1" ? true : false;
   return (
-    <div className="flex flex-col items-center justify-center h-[30rem] w-[45rem] mt-[5rem] border-2  bg-slate-700 rounded-2xl border-blue-500 gap-10">
+    <div className="flex flex-col items-center justify-center h-[30rem] w-[45rem] mt-[5rem] border-2  bg-slate-700 rounded-2xl border-blue-500 gap-10 bg-opacity-90">
     <div className="w-[15rem] flex flex-col items-center justify-center text-center gap-4">
         <img src={TEL} alt='app' className="rounded-2xl hover:shadow-lg hover:shadow-slate-1000 hover:bg-slate-100"/>  
         <p>

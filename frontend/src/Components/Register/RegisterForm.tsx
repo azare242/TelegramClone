@@ -54,7 +54,7 @@ const Register = () => {
 
   return (
     <div
-      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700`}
+      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90`}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         <TextField
@@ -66,24 +66,6 @@ const Register = () => {
           })}
           error={!!errors.username}
           helperText={errors.username?.message}
-        />
-        <TextField
-          label={languageConfig.forms.email}
-          color={`primary`}
-          type={`email`}
-          {...register("email", {
-            required: languageConfig.forms.errorMessages.email,
-            pattern: {
-              value: /^\S+@\S+$/i,
-              message: languageConfig.forms.errorMessages.email,
-            },
-          })}
-          error={!!errors.email}
-          helperText={
-            errors.email
-              ? languageConfig.forms.errorMessages.emailMissMatch
-              : ""
-          }
         />
         <TextField
           label={languageConfig.forms.phone}
