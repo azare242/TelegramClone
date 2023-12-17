@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar } from "@mui/material";
+import { AppBar, ButtonGroup, IconButton, Toolbar } from "@mui/material";
 import NavItem from "./NavItem";
 import { Link } from "react-router-dom";
 import TEL from "../../assets/icons8-telegram-96.png";
@@ -29,7 +29,7 @@ const Navbar = () => {
             />
           </Link>
           {jsonWebToken && (
-            <>
+            <ButtonGroup>
               <NavItem
                 path="/a/"
                 name={languageConfig.navbar.all}
@@ -45,19 +45,19 @@ const Navbar = () => {
                 name={languageConfig.navbar.groups}
                 icon={<GroupsTwoToneIcon />}
               />
-              <IconButton
-                sx={
-                  language === "FA"
-                    ? { marginRight: "auto" }
-                    : { marginLeft: "auto" }
-                }
-                onMouseEnter={() => console.log("focus in")}
-                onMouseLeave={() => console.log("focus out")}
-              >
-                <AccountCircleTwoToneIcon />
-              </IconButton>
-            </>
+            </ButtonGroup>
           )}
+          <IconButton
+            sx={
+              language === "FA"
+                ? { marginRight: "auto" }
+                : { marginLeft: "auto" }
+            }
+            onMouseEnter={() => console.log("focus in")}
+            onMouseLeave={() => console.log("focus out")}
+          >
+            <AccountCircleTwoToneIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </>
