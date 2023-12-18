@@ -10,6 +10,7 @@ func SetupRouter(e *echo.Echo) {
 	e.GET("healthz", handler.Healthz)
 
 	e.Use(middleware.CustomLoggerMiddleware)
+	//e.Use(echoMiddleware.Recover())
 
 	apiGroup := e.Group("/api")
 

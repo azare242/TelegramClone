@@ -1,0 +1,11 @@
+server:
+  port: 8080
+  address: localhost
+  tokenKey: secretTokenKey
+
+database:
+  port: 5432
+  address: localhost
+  user: admin
+  password: password
+  dbname: messenger
