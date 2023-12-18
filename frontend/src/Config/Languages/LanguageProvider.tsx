@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactHTML } from "react";
 interface PropsInfo {
   children: React.ReactNode;
 }
@@ -45,11 +45,15 @@ export interface LanguageConfig {
   };
   notFound: string;
   fourOFour: string;
+  settings: string;
+  logout: string;
 
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
   const [language, setLanguage] = React.useState<"FA" | "EN">("FA");
   const FA: LanguageConfig = {
+    settings: "تنظیمات",
+    logout: "خروج",
     hello: "سلام!",
     login: "ورود",
     signup: "ثبت نام",
@@ -95,6 +99,8 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
   };
 
   const EN: LanguageConfig = {
+    settings: "Settings",
+    logout: "Logout",
     hello: "Hi!",
     login: "login",
     signup: "Register",
@@ -160,7 +166,7 @@ interface LanguageContextInterface {
   language: "FA" | "EN";
   FA: unknown;
   EN: unknown;
-  setLanguage: unknown;
+  setLanguage: React.Dispatch<React.SetStateAction<"EN" | "FA">> | null;
 }
 export const LanguageContext = React.createContext<LanguageContextInterface>({
   language: "EN",

@@ -2,6 +2,7 @@ import Login from "../../Pages/Login";
 import Register from "../../Pages/Register";
 import Home from "../../Pages/Home";
 import Massenger from "../../Layouts/Massenger";
+import Settings from "../../Pages/Settings";
 
 export type AppRouteType = {
   path: string;
@@ -30,4 +31,9 @@ export const publicRoutes: AppRouteType[] = [
     name: "success",
     element: <Massenger><h1>Coming soon</h1></Massenger>,
   },
+  {
+    path: "settings",
+    name: "Settings",
+    element: <Settings/>
+  }
 ];

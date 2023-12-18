@@ -1,4 +1,4 @@
-import { AppBar, ButtonGroup, IconButton, Toolbar } from "@mui/material";
+import { AppBar, ButtonGroup, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
 import NavItem from "./NavItem";
 import { Link } from "react-router-dom";
 import TEL from "../../assets/icons8-telegram-96.png";
@@ -10,13 +10,47 @@ import { useAPI } from "../../Actions/API/useAPI";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import React from "react";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
+import TranslateIcon from '@mui/icons-material/Translate';
 const Navbar = () => {
   const { jsonWebToken } = useAPI();
-  const { language, FA, EN } = useLanguage();
+  const { language, FA, EN , setLanguage } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
     else return EN as LanguageConfig;
   }, [EN, FA, language]);
+
+  
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElLANG, setAnchorElLANG] = React.useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+  const isMenuOpenLANG = Boolean(anchorElLANG);
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+     const handleProfileMenuOpenLANG = (event) => {
+    setAnchorElLANG(event.currentTarget);
+  };
+
+  const handleMenuCloseLANGFA = () => {
+    setLanguage && setLanguage("FA")
+    setAnchorElLANG(null);
+  }; 
+  const handleMenuCloseLANGEN = () => {
+    setLanguage && setLanguage("EN")
+    setAnchorElLANG(null);
+  }; 
+
+  const handleMenuCloseLANG = () => {
+    setAnchorElLANG(null);
+  }; 
+
+
+
   return (
     <>
       <AppBar color={`primary`}>
@@ -47,17 +81,60 @@ const Navbar = () => {
               />
             </ButtonGroup>
           )}
-          <IconButton
-            sx={
-              language === "FA"
-                ? { marginRight: "auto" }
-                : { marginLeft: "auto" }
-            }
-            onMouseEnter={() => console.log("focus in")}
-            onMouseLeave={() => console.log("focus out")}
+                    {
+            <><IconButton
+
+            onClick={handleProfileMenuOpenLANG}
           >
-            <AccountCircleTwoToneIcon />
-          </IconButton>
+            <TranslateIcon />
+          </IconButton><Menu
+            anchorEl={anchorElLANG}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={isMenuOpenLANG}
+            onClose={handleMenuCloseLANG}
+          >
+              <MenuItem onClick={handleMenuCloseLANGFA}>FA</MenuItem>
+              <MenuItem onClick={handleMenuCloseLANGEN}>EN</MenuItem>
+            </Menu></>
+          }
+          {
+            jsonWebToken && (
+              <><IconButton
+                sx={language === "FA"
+                  ? { marginRight: "auto" }
+                  : { marginLeft: "auto" }}
+                onClick={handleProfileMenuOpen}
+              >
+                <AccountCircleTwoToneIcon />
+              </IconButton><Menu
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+              >
+                  <MenuItem onClick={handleMenuClose}>{languageConfig.settings}</MenuItem>
+                  <MenuItem onClick={handleMenuClose}>{languageConfig.logout}</MenuItem>
+                </Menu></>
+            )
+          }
+
+
         </Toolbar>
       </AppBar>
     </>
