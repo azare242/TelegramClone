@@ -2,11 +2,15 @@ package router
 
 import (
 	"backend/internal/domain/http/handler"
+	"backend/internal/domain/http/middleware"
 	"github.com/labstack/echo/v4"
 )
 
-func SetupRouter(e *echo.Echo) *echo.Echo {
+func SetupRouter(e *echo.Echo) {
 	e.GET("healthz", handler.Healthz)
+
+	e.Use(middleware.CustomLoggerMiddleware)
+
 	apiGroup := e.Group("/api")
 
 	// general users endpoints
@@ -38,6 +42,4 @@ func SetupRouter(e *echo.Echo) *echo.Echo {
 	GroupsGroup.DELETE("/:groupid", handler.DeleteGroup)
 	GroupsGroup.PATCH("/:groupid", handler.AddUserToGroup)
 	GroupsGroup.DELETE("/:groupid/:userid", handler.DeleteUserFromGroup)
-
-	return e
 }
