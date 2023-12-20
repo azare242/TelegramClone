@@ -1,4 +1,4 @@
-import React, { ReactHTML } from "react";
+import React from "react";
 interface PropsInfo {
   children: React.ReactNode;
 }
@@ -50,7 +50,12 @@ export interface LanguageConfig {
 
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
-  const [language, setLanguage] = React.useState<"FA" | "EN">("FA");
+  const [language, setLanguage] = React.useState<"FA" | "EN">(
+    localStorage.getItem('language') as "FA" | "EN" || "EN"
+  );
+  React.useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
   const FA: LanguageConfig = {
     settings: "تنظیمات",
     logout: "خروج",
