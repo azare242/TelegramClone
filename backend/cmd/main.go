@@ -17,6 +17,16 @@ func main() {
 
 	router.SetupRouter(e)
 
+	//open, err := gorm.Open(sqlite.Open("messenger.db"), new(gorm.Config))
+	//if err != nil {
+	//	return
+	//}
+
+	//err = open.AutoMigrate(&model.Userr{}, &model.CreditCard{})
+	//if err != nil {
+	//	return
+	//}
+
 	if err := e.Start(conf.Server.Address + ":" + strconv.Itoa(conf.Server.Port)); err != nil {
 		log.Fatalf("server failed to start %v", err)
 	}
