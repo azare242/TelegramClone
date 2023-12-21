@@ -51,10 +51,10 @@ export interface LanguageConfig {
 }
 export const LanguageProvider = ({ children }: PropsInfo) => {
   const [language, setLanguage] = React.useState<"FA" | "EN">(
-    localStorage.getItem('language') as "FA" | "EN" || "EN"
+    localStorage.getItem('mytel-language') as "FA" | "EN" || "EN"
   );
   React.useEffect(() => {
-    localStorage.setItem('language', language);
+    localStorage.setItem('mytel-language', language);
   }, [language]);
   const FA: LanguageConfig = {
     settings: "تنظیمات",
