@@ -9,3 +9,10 @@ database:
   user: admin
   password: password
   dbname: messenger
+
+s3:
+  accessKey: ee82ad29-9bec-40f7-a64c-d854390c51a2
+  secretKey: 24e63f33c5255a3862f0e7f83d6d37d519e2c55489b855f5dbba7bc5b41a45c4
+  bucket: profilePic
+  endpoint: https://telegramclone.s3.ir-thr-at1.arvanstorage.ir
+  region: default

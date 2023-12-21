@@ -12,6 +12,7 @@ require (
 )
 
 require (
+	github.com/aws/aws-sdk-go v1.49.8 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
