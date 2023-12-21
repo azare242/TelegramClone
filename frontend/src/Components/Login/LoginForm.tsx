@@ -13,7 +13,7 @@ import {
 import { LoginFormValues } from "../../Types/inedx";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
-
+import LodingInButton from "../Loading/LodingInButton";
 const LoginForm = () => {
   const navigate = useNavigate();
   const {
@@ -24,6 +24,7 @@ const LoginForm = () => {
 
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<number>(-1);
+  const [loading, setLoding] = React.useState<boolean>(false)
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
@@ -48,10 +49,15 @@ const LoginForm = () => {
     // Add your login logic here
     // For example, you can send a request to your authentication API
     // and handle success or error accordingly
+    setLoding(true)
     console.log(data);
-    setSuccess(1);
+    setTimeout(() => {
+      setLoding(false)
+      setSuccess(1)
+    }, 2000)  
   };
 
+  
   return (
     <div
       className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90`}
@@ -81,8 +87,8 @@ const LoginForm = () => {
           }
           label={languageConfig.showPassword}
         />
-        <Button variant={`contained`} type="submit">
-          {languageConfig.login}
+        <Button variant={`contained`} type="submit" disabled={loading}>
+          {!loading ? languageConfig.login : <LodingInButton/>}
         </Button>
       </form>
       <Link to={`/signup`} className="w-full">

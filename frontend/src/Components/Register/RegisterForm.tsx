@@ -13,7 +13,7 @@ import {
 import { RegisterFormValues } from "../../Types/inedx";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
-
+import LoadingInButton from '../Loading/LodingInButton'
 const Register = () => {
   const navigate = useNavigate();
   const {
@@ -26,6 +26,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<number>(-1);
   const { language, FA, EN } = useLanguage();
+  const [loading, setLoading] = React.useState<boolean>(false);
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
     else return EN as LanguageConfig;
@@ -49,7 +50,11 @@ const Register = () => {
     data: RegisterFormValues
   ) => {
     console.log(data);
-    setSuccess(1);
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+      setSuccess(1)
+    }, 2000)
   };
 
   return (
@@ -108,8 +113,8 @@ const Register = () => {
           }
           label={languageConfig.showPassword}
         />
-        <Button variant={`contained`} type="submit">
-          {languageConfig.signup}
+        <Button variant={`contained`} type="submit" disabled={loading}>
+          {!loading ? languageConfig.signup : <LoadingInButton/>}
         </Button>
       </form>
       <Link to={`/login`} className="w-full">
