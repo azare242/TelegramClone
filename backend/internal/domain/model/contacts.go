@@ -10,7 +10,7 @@ var (
 type Status string
 
 const (
-	Pending Status = "pending"
+	Pending  Status = "pending"
 	Accepted Status = "accepted"
 	Blocked  Status = "blocked"
 )

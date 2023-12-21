@@ -28,12 +28,12 @@ func ConnectS3(accessKey, secretKey, region, endpoint string) (*session.Session,
 	return s3Session, nil
 }
 
-func UploadS3(sess *session.Session, fileHeader *multipart.FileHeader, bucket string, ID string) string {
+func UploadS3(sess *session.Session, fileHeader *multipart.FileHeader, bucket string, ID string) (string, error) {
 	uploader := s3manager.NewUploader(sess)
 	file, err := fileHeader.Open()
 	if err != nil {
 		log.Warnln("cant open file")
-		return ""
+		return "", err
 	}
 
 	fullFileName := ID + fileHeader.Filename
@@ -46,17 +46,17 @@ func UploadS3(sess *session.Session, fileHeader *multipart.FileHeader, bucket st
 	})
 	if err != nil {
 		log.Warnf("Unable to upload %q to %q, %v", fullFileName, bucket, err)
-		return ""
+		return "", err
 	}
 	log.Infof("Successfully uploaded %q to %q\n", fullFileName, bucket)
 
-	return key
+	return key, nil
 }
 
 func DownloadS3(sess *session.Session, bucket string, key string) (*os.File, error) {
 	getwd, _ := os.Getwd()
 
-	file, err := os.Create(getwd + "/resources/profile/" + key)
+	file, err := os.Create(getwd + "/../resources/profile/" + key)
 	if err != nil {
 		log.Warnf("Unable to open file %q, %v", key, err)
 		return nil, err
