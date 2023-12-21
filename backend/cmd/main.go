@@ -1,8 +1,8 @@
 package main
 
 import (
-	"backend/internal/domain/config"
-	"backend/internal/domain/http/router"
+	"backend/internal/infra/config"
+	"backend/internal/infra/http/router"
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
 	"strconv"

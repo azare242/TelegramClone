@@ -1,8 +1,8 @@
 package router
 
 import (
-	"backend/internal/domain/http/handler"
-	"backend/internal/domain/http/middleware"
+	"backend/internal/infra/http/handler"
+	"backend/internal/infra/http/middleware"
 	"github.com/labstack/echo/v4"
 )
 
