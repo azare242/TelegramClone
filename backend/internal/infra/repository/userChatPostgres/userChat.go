@@ -84,7 +84,7 @@ func (u *Repository) Get(ctx context.Context, cmd userChatRepo.GetCommand) ([]mo
 
 func (u *Repository) Update(ctx context.Context, userChat model.Chat) error {
 	var condition UserChatDTO
-	condition.UserID = userChat.UserID
+	condition.ChatID = userChat.ChatID
 
 	dto := UserChatDTO{
 		Chat:      userChat,

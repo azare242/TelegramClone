@@ -6,12 +6,6 @@ var (
 	ChatNotFoundErr = errors.New("chat not found")
 )
 
-type GetCommand struct {
-	ID         *uint64
-	UserID     *uint64
-	ReceiverID *uint64
-}
-
 type Chat struct {
 	ChatID     uint64 `gorm:"primaryKey;autoIncrement;not null" json:"chatID"`
 	UserID     uint64 `gorm:"foreignKey;not null" json:"userID"`

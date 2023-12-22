@@ -6,7 +6,7 @@ import (
 )
 
 type GetCommand struct {
-	GroupID *uint64
+	ID *uint64
 	Name   *string
 }
 
