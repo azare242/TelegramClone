@@ -60,7 +60,7 @@ const LoginForm = () => {
   
   return (
     <div
-      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90`}
+      className={`flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-white/30 backdrop-blur-sm`}
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <TextField

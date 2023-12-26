@@ -29,7 +29,7 @@ const GithubLink = () => {
   z-20 origin-left scale-0 px-3 rounded-lg border 
   border-gray-300 bg-black py-2 text-sm font-bold
   shadow-md transition-all duration-300 ease-in-out 
-  group-hover:scale-100"
+  group-hover:scale-100 text-white"
       >
         {languageConfig.hello}
         <span></span>
