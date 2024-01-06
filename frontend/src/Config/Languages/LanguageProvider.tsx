@@ -3,6 +3,7 @@ interface PropsInfo {
   children: React.ReactNode;
 }
 export interface LanguageConfig {
+  bio: string;
   hello: string;
   login: string;
   signup: string;
@@ -57,6 +58,7 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
     localStorage.setItem('mytel-language', language);
   }, [language]);
   const FA: LanguageConfig = {
+    bio: "بیوگرافی",
     settings: "تنظیمات",
     logout: "خروج",
     hello: "سلام!",
@@ -104,6 +106,8 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
   };
 
   const EN: LanguageConfig = {
+    bio: "bio",
+
     settings: "Settings",
     logout: "Logout",
     hello: "Hi!",

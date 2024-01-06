@@ -4,7 +4,7 @@ interface PropsInfo {
 }
 export const ApiProvider = ({ children }: PropsInfo) => {
   const [jsonWebToken,] = React.useState<string | null>(
-    (localStorage.getItem('mytel-jwt') as string) !== "" ? localStorage.getItem('mytel-jwt') as string : null
+    (localStorage.getItem('mytel-jwt') as string) !== "" ? localStorage.getItem('mytel-jwt') as string : "n"
   );
 
   React.useEffect(() => {

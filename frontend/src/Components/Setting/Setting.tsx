@@ -15,9 +15,10 @@ import { PhotoCamera, SaveOutlined } from "@mui/icons-material";
 interface PropsInfo {
   username: string;
   phoneNumber: string;
+  bio: string;
 }
 
-const SettingsMenu = ({ username, phoneNumber }: PropsInfo) => {
+const SettingsMenu = ({ username, phoneNumber, bio }: PropsInfo) => {
 
   const [editing, setEditing] = React.useState<boolean>(false);
   const [profileImage, setProfileImage] = React.useState<string>(
@@ -77,7 +78,7 @@ const SettingsMenu = ({ username, phoneNumber }: PropsInfo) => {
               </IconButton>
             </label>
           }
-          <div className="w-full flex justify-between items-center mb-2">
+          <div className="w-full flex justify-between items-center mb-2 gap-3">
             {!editing ? (
               <Typography variant="h6" component="div" className="font-bold">
                 {username}
@@ -100,6 +101,17 @@ const SettingsMenu = ({ username, phoneNumber }: PropsInfo) => {
               label={languageConfig.forms.phone}
               color={`primary`}
               defaultValue={phoneNumber}
+            />
+          )}
+          {!editing ? (
+            <Typography variant="body1" color="text.secondary">
+              {bio}
+            </Typography>
+          ) : (
+            <TextField
+              label={languageConfig.bio}
+              color={`primary`}
+              defaultValue={bio}
             />
           )}
         </CardContent>

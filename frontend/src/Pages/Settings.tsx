@@ -5,7 +5,7 @@ const Settings = () => {
   
   return (
     <>
-       <SettingsMenu username="azare242" phoneNumber="09139389273"/>
+       <SettingsMenu username="azare242" phoneNumber="09139389273" bio="i hate myself"/>
     </>
   );
 };
