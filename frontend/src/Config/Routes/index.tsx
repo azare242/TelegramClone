@@ -10,6 +10,8 @@ import {
   OtherUserMessageInGroup,
   UserMessage,
 } from "../../Components/Message/Message";
+import ContactList from "../../Components/Contacts/ContactList";
+import Contacts from "../../Pages/Contacts";
 
 export type AppRouteType = {
   path: string;
@@ -158,4 +160,9 @@ export const publicRoutes: AppRouteType[] = [
     name: "Settings",
     element: <Settings />,
   },
+  {
+    path: "contacts",
+    name: "Contacts",
+    element: <Contacts x={1}/>
+  }
 ];

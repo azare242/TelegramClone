@@ -14,7 +14,7 @@ const ChatPagePV: React.FC<{userImage: string, userName: string, children: React
     }, [children]); // Scroll to bottom every time children change
   
   return (
-    <div className="container mx-auto p-4 ">
+    <div className="container mx-auto p-4 h-full">
       <div className="flex items-center p-4 border-b-2">
         <Avatar alt="User Image" src={userImage} />
         <div className="ml-4">
@@ -23,7 +23,7 @@ const ChatPagePV: React.FC<{userImage: string, userName: string, children: React
         </div>
       </div>
 
-      <div className="messages p-4 h-96 overflow-y-auto">
+      <div className="messages p-4 h-full overflow-y-auto">
         {children}
         {/* Invisible element to scroll into view */}
         <div ref={messagesEndRef} />
@@ -52,7 +52,7 @@ const ChatPageGroup: React.FC<{gpImage: string, gpName: string, children: React.
     }, [children]); // Scroll to bottom every time children change
   
   return (
-    <div className="container mx-auto p-4 ">
+    <div className="container mx-auto p-4 h-full">
       <div className="flex items-center p-4 border-b-2">
         <Avatar alt="User Image" src={gpImage} />
         <div className="ml-4">
@@ -60,7 +60,7 @@ const ChatPageGroup: React.FC<{gpImage: string, gpName: string, children: React.
         </div>
       </div>
 
-      <div className="messages p-4 h-96 overflow-y-auto">
+      <div className="messages p-4 h-[80%] overflow-y-auto">
         {children}
         {/* Invisible element to scroll into view */}
         <div ref={messagesEndRef} />

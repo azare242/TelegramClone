@@ -1,6 +1,6 @@
 import { AppBar, ButtonGroup, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
 import NavItem from "./NavItem";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import TEL from "../../assets/icons8-telegram-96.png";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import PersonOutlineTwoToneIcon from "@mui/icons-material/PersonOutlineTwoTone";
@@ -11,6 +11,7 @@ import { useLanguage } from "../../Config/Languages/useLanguage";
 import React from "react";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import TranslateIcon from '@mui/icons-material/Translate';
+import { Book } from "@mui/icons-material";
 const Navbar = () => {
   const { jsonWebToken } = useAPI();
   const { language, FA, EN , setLanguage } = useLanguage();
@@ -19,6 +20,7 @@ const Navbar = () => {
     else return EN as LanguageConfig;
   }, [EN, FA, language]);
 
+  const navigate = useNavigate();
   
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchorElLANG, setAnchorElLANG] = React.useState(null);
@@ -65,11 +67,6 @@ const Navbar = () => {
           {jsonWebToken && (
             <ButtonGroup>
               <NavItem
-                path="/a/"
-                name={languageConfig.navbar.all}
-                icon={<AppsTwoToneIcon />}
-              />
-              <NavItem
                 path="/b/c"
                 name={languageConfig.navbar.privates}
                 icon={<PersonOutlineTwoToneIcon />}
@@ -78,6 +75,11 @@ const Navbar = () => {
                 path="/d/c"
                 name={languageConfig.navbar.groups}
                 icon={<GroupsTwoToneIcon />}
+              />
+              <NavItem
+                path="/d/d"
+                name={languageConfig.contacts}
+                icon={<Book />}
               />
             </ButtonGroup>
           )}
@@ -128,8 +130,12 @@ const Navbar = () => {
                 open={isMenuOpen}
                 onClose={handleMenuClose}
               >
-                  <MenuItem onClick={handleMenuClose}>{languageConfig.settings}</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>{languageConfig.logout}</MenuItem>
+                  <MenuItem onClick={() => {
+                    navigate("/settings")
+                    handleMenuClose()
+
+                  }}>{languageConfig.settings}</MenuItem>
+                  <MenuItem onClick={()=>{handleMenuClose()}}>{languageConfig.logout}</MenuItem>
                 </Menu></>
             )
           }
