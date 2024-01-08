@@ -4,6 +4,7 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "./Theme/Theme";
 import { ApiProvider } from "./Actions/API/ApiProvider";
 import { LanguageProvider } from "./Config/Languages/LanguageProvider";
+import FloatingButton from "./Components/FloatingButton/FloatingButton";
 function App() {
 
   return (
@@ -15,6 +16,8 @@ function App() {
             <Navbar />
             <AppRoutes />
 
+
+            
 
           </ApiProvider>
         </ThemeProvider>

@@ -35,10 +35,10 @@ const ChatCardList = ({ chatItems }: ChatCardListProps) => {
           />
         ))}
       </div>
-      <div className="flex items-center justify-center flex-col">
+      {/* <div className="flex items-center justify-center flex-col">
           <Button>New Group</Button>
           <Button>New Chat</Button>
-        </div>
+        </div> */}
     </div>
   );
 };
