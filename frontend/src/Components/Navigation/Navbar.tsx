@@ -5,7 +5,7 @@ import TEL from "../../assets/icons8-telegram-96.png";
 import AccountCircleTwoToneIcon from "@mui/icons-material/AccountCircleTwoTone";
 import PersonOutlineTwoToneIcon from "@mui/icons-material/PersonOutlineTwoTone";
 import GroupsTwoToneIcon from "@mui/icons-material/GroupsTwoTone";
-import AppsTwoToneIcon from "@mui/icons-material/AppsTwoTone";
+
 import { useAPI } from "../../Actions/API/useAPI";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import React from "react";
@@ -22,35 +22,31 @@ const Navbar = () => {
 
   const navigate = useNavigate();
   
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [anchorElLANG, setAnchorElLANG] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const [anchorElLANG, setAnchorElLANG] = React.useState<HTMLElement | null>(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMenuOpenLANG = Boolean(anchorElLANG);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget as HTMLElement);
   };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  
+  const handleProfileMenuOpenLANG = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElLANG(event.currentTarget as HTMLElement);
   };
-     const handleProfileMenuOpenLANG = (event) => {
-    setAnchorElLANG(event.currentTarget);
-  };
-
+  
   const handleMenuCloseLANGFA = () => {
     setLanguage && setLanguage("FA")
     setAnchorElLANG(null);
   }; 
+  
   const handleMenuCloseLANGEN = () => {
     setLanguage && setLanguage("EN")
     setAnchorElLANG(null);
   }; 
-
+  
   const handleMenuCloseLANG = () => {
     setAnchorElLANG(null);
   }; 
-
 
 
   return (
