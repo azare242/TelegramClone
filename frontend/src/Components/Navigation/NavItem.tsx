@@ -1,11 +1,12 @@
 import { Button } from "@mui/material";
+import React from "react";
 import { Link } from "react-router-dom";
-interface PropsInfo {
+
+const NavItem: React.FC<{
   path: string;
   name: string;
   icon: JSX.Element | null;
-}
-const NavItem = ({ path, name, icon }: PropsInfo) => {
+}> = ({ path, name, icon }) => {
   return (
     <>
       <Link to={path}>

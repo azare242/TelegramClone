@@ -12,21 +12,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import { PhotoCamera, SaveOutlined } from "@mui/icons-material";
-interface PropsInfo {
+
+const SettingsMenu: React.FC<{
   username: string;
   phoneNumber: string;
   bio: string;
-}
-
-const SettingsMenu = ({ username, phoneNumber, bio }: PropsInfo) => {
-
+}> = ({ username, phoneNumber, bio }) => {
   const [editing, setEditing] = React.useState<boolean>(false);
   const [profileImage, setProfileImage] = React.useState<string>(
     "/path/to/user/image.jpg"
   );
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>(() => {
-    return language === "FA" ? FA as LanguageConfig: EN as LanguageConfig;
+    return language === "FA" ? (FA as LanguageConfig) : (EN as LanguageConfig);
   }, [EN, FA, language]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,7 +65,7 @@ const SettingsMenu = ({ username, phoneNumber, bio }: PropsInfo) => {
             sx={{ width: "100px", height: "100px", marginBottom: 2 }}
             variant="rounded"
           />
-          { editing && 
+          {editing && (
             <label htmlFor="icon-button-file">
               <IconButton
                 color="primary"
@@ -77,7 +75,7 @@ const SettingsMenu = ({ username, phoneNumber, bio }: PropsInfo) => {
                 <PhotoCamera />
               </IconButton>
             </label>
-          }
+          )}
           <div className="w-full flex justify-between items-center mb-2 gap-3">
             {!editing ? (
               <Typography variant="h6" component="div" className="font-bold">

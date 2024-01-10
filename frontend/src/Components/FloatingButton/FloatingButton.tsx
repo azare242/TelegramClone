@@ -11,8 +11,6 @@ import { LanguageConfig } from '../../Config/Languages/LanguageProvider';
 
 
 export default function FloatingButton() {
-
-
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;

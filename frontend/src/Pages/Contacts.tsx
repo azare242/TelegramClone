@@ -3,7 +3,7 @@ import ContactList from "../Components/Contacts/ContactList";
 import { Button, IconButton, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
-const Contacts: React.FC<{ x: number }> = ({ x }) => {
+const Contacts: React.FC = () => {
   return (
     <div className="flex flex-col rounded-2xl border-blue-500 bg-white/70 backdrop-blur-sm mt-[100px]">
       <div className="flex items-center justify-between p-4">

@@ -1,12 +1,11 @@
 import { Avatar, Card, CardContent, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-interface PropsInfo {
+const ChatCard: React.FC<{
   username: string;
   avatarSrc: string;
   message: string;
-}
-const ChatCard = ({ username, avatarSrc, message }: PropsInfo) => {
+}> = ({ username, avatarSrc, message }) => {
   return (
     <div className="">
       <Link to="">
@@ -50,9 +49,9 @@ const ChatCard = ({ username, avatarSrc, message }: PropsInfo) => {
               {message}
             </Typography>
           </CardContent>
-          <Typography variant="caption" color="text.secondary" >
-              {"11:30 PM"}
-            </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {"11:30 PM"}
+          </Typography>
         </Card>
       </Link>
     </div>

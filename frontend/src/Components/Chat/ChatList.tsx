@@ -1,20 +1,15 @@
-import { Button, IconButton, TextField } from "@mui/material";
+import { IconButton, TextField } from "@mui/material";
 import ChatCard from "./ChatCard";
 import { Search } from "@mui/icons-material";
 
-interface ChatItem {
-  id: number;
-  username: string;
-  avatarSrc: string;
-  message: string;
-}
-
-// Define the props for the ChatCardList component
-interface ChatCardListProps {
-  chatItems: ChatItem[];
-}
-
-const ChatCardList = ({ chatItems }: ChatCardListProps) => {
+const ChatCardList: React.FC<{
+  chatItems: {
+    id: number;
+    username: string;
+    avatarSrc: string;
+    message: string;
+  }[];
+}> = ({ chatItems }) => {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between p-4">
@@ -22,8 +17,6 @@ const ChatCardList = ({ chatItems }: ChatCardListProps) => {
         <IconButton>
           <Search />
         </IconButton>
-
-
       </div>
       <div className="flex flex-col gap-0 overflow-y-auto rounded-lg h-full">
         {chatItems.map((chatItem) => (

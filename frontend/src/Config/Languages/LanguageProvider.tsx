@@ -1,7 +1,5 @@
 import React from "react";
-interface PropsInfo {
-  children: React.ReactNode;
-}
+
 export interface LanguageConfig {
   chat: string;
   groupAdd: string;
@@ -17,9 +15,9 @@ export interface LanguageConfig {
   welcome: {
     green: string;
     sdq: string;
-    wlto: string,
-    by: string,
-    and: string
+    wlto: string;
+    by: string;
+    and: string;
   };
   navbar: {
     all: string;
@@ -27,38 +25,39 @@ export interface LanguageConfig {
     groups: string;
   };
   snackbars: {
-    pleaseLogin: string,
-    loginSucces: string,
-    loginError: string,
-    registerSuccess: string,
-    registerError: string,
+    pleaseLogin: string;
+    loginSucces: string;
+    loginError: string;
+    registerSuccess: string;
+    registerError: string;
   };
   forms: {
-    username: string,
-    password: string,
-    confirmPassword: string,
+    username: string;
+    password: string;
+    confirmPassword: string;
 
-    phone: string,
+    phone: string;
     errorMessages: {
-      username: string,
-      password: string,
-      confirmPassword: string,
-      phone: string,
-      passwordMissMatch: string,
-    }
+      username: string;
+      password: string;
+      confirmPassword: string;
+      phone: string;
+      passwordMissMatch: string;
+    };
   };
   notFound: string;
   fourOFour: string;
   settings: string;
   logout: string;
-
 }
-export const LanguageProvider = ({ children }: PropsInfo) => {
+export const LanguageProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
   const [language, setLanguage] = React.useState<"FA" | "EN">(
-    localStorage.getItem('mytel-language') as "FA" | "EN" || "EN"
+    (localStorage.getItem("mytel-language") as "FA" | "EN") || "EN"
   );
   React.useEffect(() => {
-    localStorage.setItem('mytel-language', language);
+    localStorage.setItem("mytel-language", language);
   }, [language]);
   const FA: LanguageConfig = {
     chat: "گفتگو",
@@ -78,7 +77,7 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
       sdq: "محمدصادق محمدی",
       wlto: "به مای‌تل خوش آمدید",
       by: "از",
-      and: "و"
+      and: "و",
     },
     navbar: {
       all: "همه",
@@ -104,11 +103,11 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
         confirmPassword: "رمز عبور را تایید کنید",
         phone: "شماره تلفن را وارد کنید.",
         passwordMissMatch: "رمز عبود و تایید آن مطابقت ندارند",
-      }
+      },
     },
     submit: "ثبت",
     notFound: "پیدا نشد",
-    fourOFour: "۴۰۴"
+    fourOFour: "۴۰۴",
   };
 
   const EN: LanguageConfig = {
@@ -129,7 +128,7 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
       sdq: "Mohammad Sadegh Mohammadi",
       wlto: "Welcome to MyTel",
       by: "by",
-      and: "&"
+      and: "&",
     },
     navbar: {
       all: "All",
@@ -140,9 +139,9 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
       pleaseLogin: "Please Login",
       loginSucces: "Login Successful, you will navigate to the main page",
       loginError: "Information is incorrect",
-      registerSuccess: "Register Successfully, you will navigate to the login page",
+      registerSuccess:
+        "Register Successfully, you will navigate to the login page",
       registerError: "Error in Registration",
-
     },
     forms: {
       username: "Username",
@@ -157,11 +156,11 @@ export const LanguageProvider = ({ children }: PropsInfo) => {
 
         phone: "Phone Number is required",
         passwordMissMatch: "Password and confirm miss match",
-      }
+      },
     },
     submit: "Submit",
     notFound: "Not Found",
-    fourOFour: "404"
+    fourOFour: "404",
   };
   const context = {
     language,

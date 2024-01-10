@@ -1,15 +1,19 @@
 import React from "react";
-interface PropsInfo {
+
+export const ApiProvider: React.FC<{
   children: React.ReactNode;
-}
-export const ApiProvider = ({ children }: PropsInfo) => {
-  const [jsonWebToken,] = React.useState<string | null>(
-    (localStorage.getItem('mytel-jwt') as string) !== "" ? localStorage.getItem('mytel-jwt') as string : "n"
+}> = ({ children }) => {
+  const [jsonWebToken] = React.useState<string | null>(
+    (localStorage.getItem("mytel-jwt") as string) !== ""
+      ? (localStorage.getItem("mytel-jwt") as string)
+      : "n"
   );
 
   React.useEffect(() => {
-    jsonWebToken ? localStorage.setItem('mytel-jwt', jsonWebToken) : localStorage.setItem('mytel-jwt', "")
-  }, [jsonWebToken])
+    jsonWebToken
+      ? localStorage.setItem("mytel-jwt", jsonWebToken)
+      : localStorage.setItem("mytel-jwt", "");
+  }, [jsonWebToken]);
 
   const context = {
     jsonWebToken,
