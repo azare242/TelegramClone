@@ -13,9 +13,9 @@ const GithubLink = () => {
     <div className="group relative">
       <Link to="https://github.com/azare242/TelegramClone">
         <svg
-          stroke-linejoin="round"
-          stroke-linecap="round"
-          stroke-width="2"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          strokeWidth="2"
           stroke="currentColor"
           fill="none"
           viewBox="0 0 24 24"

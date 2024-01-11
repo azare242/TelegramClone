@@ -54,7 +54,7 @@ const LoginForm = () => {
     setLoding(true)
     console.log(data);
     
-    const res = login === null ? {success: false, message: "unknown error"} : await login(data.username, data.password, true);
+    const res = login === null ? {success: false, message: "unknown error", data: undefined} : await login(data, true);
 
     if (res?.success) setSuccess(1);
     else setSuccess(0)

@@ -1,10 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
-export interface Response {
-  success: boolean,
-  message: string
-}
+import { LoginFormValues, RegisterFormValues, Response } from "../../Types/inedx";
 export const ApiProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -23,39 +20,56 @@ export const ApiProvider: React.FC<{
 
 
 
-  const login = React.useCallback(async (username: string, password: string, mock: boolean = false): Promise<Response> => {
+  const login = React.useCallback(async (form: LoginFormValues, mock: boolean = false): Promise<Response<undefined>> => {
 
     try {
       const res = await axios.request({
         url: mock ? "http://127.0.0.1:3000/mock/login" : `${BASE_URL_HTTP}${API_ROUTES.login.path}`,
         method: mock ? "POST" : API_ROUTES.login.method,
-        data: {username, password}
+        data: {...form}
       })
 
       if (res.status === 200) {
         setJsonWebToken(res.data.access_token)
-        return {success: true, message: "login successfully"}
+        return {success: true, message: "login successfully", data: undefined}
       } else if (res.status === 401) {
 
-        return {success: false, message: "wrong password"}
+        return {success: false, message: "wrong password", data: undefined}
       } else if (res.status === 404) {
-        return {success: false , message: "user not found"}
+        return {success: false , message: "user not found", data: undefined}
       }
     } catch (e: any) {
-      console.log(e)
-      return {success: false, message: e.response.data.message}
+      return {success: false, message: e.response.data.message, data: undefined}
     }
-    return {success: false, message: "unknown error"}
+    return {success: false, message: "unknown error", data: undefined}
   }, [])
 
   const logout = () => {
     localStorage.removeItem("mytel-jwt")
     setJsonWebToken(null);
   }
+
+  const signup = React.useCallback( async (form: RegisterFormValues, mock: boolean = false): Promise<Response<undefined>> => {
+    try {
+      const res = await axios.request({
+        url: mock ? "http://127.0.0.1:3000/mock/register" : `${BASE_URL_HTTP}${API_ROUTES.register.path}`,
+        method: mock ? "POST" : API_ROUTES.register.method,
+        data: {...form}
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "register successfully", data: undefined}
+      }
+    } catch (e: any) {
+      return {success: false, message: e.response.data.message, data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [])
   const context = {
     jsonWebToken,
     login,
     logout,
+    signup
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -63,11 +77,13 @@ export const ApiProvider: React.FC<{
 
 interface APIContextInterface {
   jsonWebToken: string | null;
-  login:( (username: string, password: string, mock?: boolean) => Promise<Response>) | null
+  login:( (form: LoginFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
   logout: (() => void) | null
+  signup: ((form: RegisterFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
-  jsonWebToken: "",
+  jsonWebToken: null,
   login: null,
-  logout: null
+  logout: null,
+  signup: null
 });

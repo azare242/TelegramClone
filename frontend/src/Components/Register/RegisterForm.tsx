@@ -14,6 +14,7 @@ import { RegisterFormValues } from "../../Types/inedx";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import LoadingInButton from '../Loading/LodingInButton'
+import { useAPI } from "../../Actions/API/useAPI";
 const Register = () => {
   const navigate = useNavigate();
   const {
@@ -23,6 +24,7 @@ const Register = () => {
     watch,
   } = useForm<RegisterFormValues>();
 
+  const {signup} = useAPI()
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<number>(-1);
   const { language, FA, EN } = useLanguage();
@@ -46,15 +48,16 @@ const Register = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<RegisterFormValues> = (
+  const onSubmit: SubmitHandler<RegisterFormValues> = async (
     data: RegisterFormValues
   ) => {
-    console.log(data);
+      console.log(data);
     setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      setSuccess(1)
-    }, 2000)
+    const res = signup === null ? {success: false, message: "unknown error", data: undefined} : await signup(data, true);
+    
+    if (res.success) setSuccess(1)
+    else setSuccess(0)
+    setLoading(false)
   };
 
   return (
