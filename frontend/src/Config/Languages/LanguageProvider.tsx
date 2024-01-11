@@ -32,10 +32,12 @@ export interface LanguageConfig {
     registerError: string;
   };
   forms: {
+    firstName: string;
+    lastName: string;
+    bio: string;
     username: string;
     password: string;
     confirmPassword: string;
-
     phone: string;
     errorMessages: {
       username: string;
@@ -43,6 +45,7 @@ export interface LanguageConfig {
       confirmPassword: string;
       phone: string;
       passwordMissMatch: string;
+      firstName: string;
     };
   };
   notFound: string;
@@ -92,12 +95,16 @@ export const LanguageProvider: React.FC<{
       registerError: "خطا در ثبت نام",
     },
     forms: {
+      firstName: "نام",
+      lastName: "نام خانوادگی",
+      bio: "درباره",
       username: "نام کاربری",
       password: "رمز عبور",
       confirmPassword: "تایید رمز عبور",
 
       phone: "شماره تلفن",
       errorMessages: {
+        firstName: "نام خودرا وارد کنید",
         username: "نام کاربری را وارد کنید",
         password: "رمز عبور را وارد کنید",
         confirmPassword: "رمز عبور را تایید کنید",
@@ -147,9 +154,12 @@ export const LanguageProvider: React.FC<{
       username: "Username",
       password: "Password",
       confirmPassword: "Confirm Password",
-
+      firstName: "FirstName",
+      lastName: "LastName",
+      bio: "Bio",
       phone: "Phone Number",
       errorMessages: {
+        firstName: "Firstname is required",
         username: "Username is required",
         password: "Password is required",
         confirmPassword: "Confirm Password is required",

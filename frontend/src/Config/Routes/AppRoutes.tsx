@@ -6,8 +6,8 @@ const AppRoutes = () => {
   return (
     <>
       <Routes>
-        {publicRoutes.map((route: AppRouteType) => (
-          <Route path={route.path} element={route.element} />
+        {publicRoutes.map((route: AppRouteType, index: number) => (
+          <Route key={index} path={route.path} element={route.element} />
         ))}
         <Route path="*" element={<NotFound/>  }/>
       </Routes>

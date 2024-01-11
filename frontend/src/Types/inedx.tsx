@@ -23,6 +23,17 @@ export interface NewContactFormValues {
   phone: string
 }
 
+export interface UserInfoFormValues {
+  username: string
+  firstName: string
+  lastName: string
+  phone: string
+  bio: string
+}
+
+export interface UserInfo  extends UserInfoFormValues {
+  image: string
+}
 
 
 // ====================

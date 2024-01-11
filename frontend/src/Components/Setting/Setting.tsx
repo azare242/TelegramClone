@@ -1,30 +1,28 @@
-import React from "react";
+import React from 'react';
 import {
   Avatar,
   IconButton,
-  Typography,
   CardContent,
   Card,
   TextField,
-} from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
 
-import { useLanguage } from "../../Config/Languages/useLanguage";
-import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
-import { PhotoCamera, SaveOutlined } from "@mui/icons-material";
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete'
+import { useLanguage } from '../../Config/Languages/useLanguage';
+import { LanguageConfig } from '../../Config/Languages/LanguageProvider';
+import { PhotoCamera, SaveOutlined } from '@mui/icons-material';
+import { UserInfo, UserInfoFormValues } from '../../Types/inedx';
+import { useForm } from 'react-hook-form';
 
 const SettingsMenu: React.FC<{
-  username: string;
-  phoneNumber: string;
-  bio: string;
-}> = ({ username, phoneNumber, bio }) => {
+  userInfo: UserInfo;
+}> = ({ userInfo }) => {
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [profileImage, setProfileImage] = React.useState<string>(
-    "/path/to/user/image.jpg"
-  );
+  const [profileImage, setProfileImage] = React.useState<string>('');
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>(() => {
-    return language === "FA" ? (FA as LanguageConfig) : (EN as LanguageConfig);
+    return language === 'FA' ? (FA as LanguageConfig) : (EN as LanguageConfig);
   }, [EN, FA, language]);
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,81 +35,149 @@ const SettingsMenu: React.FC<{
     }
   };
 
+  const formRef = React.useRef<HTMLFormElement>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserInfoFormValues>({
+    defaultValues: {
+      username: userInfo ? userInfo.username : "",
+      bio: userInfo ? userInfo.bio : "",
+      firstName: userInfo ? userInfo.firstName : "",
+      lastName: userInfo ? userInfo.lastName : "",
+      phone: userInfo ? userInfo.phone : "",
+    },
+  });  const handleDeleteProfileImage = () => {
+    setProfileImage(''); 
+  };
+
+
+
   return (
-    <div className="flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90">
-      <Card className="max-w-xs mx-auto h-[400px] w-[300px] flex items-start justify-center gap-5">
-        <CardContent className="flex flex-col items-center p-4">
-          <input
-            accept="image/*"
-            type="file"
-            onChange={handleImageChange}
-            id="icon-button-file"
-            style={{ display: "none" }}
-          />
-          <IconButton
-            aria-label="edit"
-            size="small"
-            onClick={() => setEditing(!editing)}
+    <div className='flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90'>
+      <Card className='max-w-xs mx-auto h-full w-[400px] flex items-start justify-center gap-5'>
+        <CardContent className='flex flex-col items-center p-4'>
+        <IconButton
+            aria-label='edit'
+            size='small'
+            onClick={() => {
+              console.log('c', editing);
+              if (editing) {
+                formRef.current && handleSubmit(
+                  (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
+                    event?.preventDefault();
+                    console.log(data);
+                    setEditing(false);
+                  }
+                )()
+              } else {
+                setEditing(true);
+              }
+            }}
             sx={{
-              marginTop: "auto",
+              marginTop: 'auto',
             }}
           >
             {!editing ? <EditIcon /> : <SaveOutlined />}
           </IconButton>
 
-          <Avatar
-            alt={username}
-            src={profileImage}
-            sx={{ width: "100px", height: "100px", marginBottom: 2 }}
-            variant="rounded"
+          <div className='flex flex-col items-center border border-blue-200 mb-4 p-1 w-full rounded-lg bg-blue-200'>
+          <input
+            accept='image/*'
+            type='file'
+            onChange={handleImageChange}
+            id='icon-button-file'
+            style={{ display: 'none' }}
           />
-          {editing && (
-            <label htmlFor="icon-button-file">
+          <Avatar
+            alt={userInfo.username}
+            src={profileImage}
+            sx={{ width: '100px', height: '100px', marginBottom: 2 }}
+            variant='rounded'
+          />
+          {editing &&  (
+            <div className='flex flex-row gap-2'>
+              <label htmlFor='icon-button-file'>
+                <IconButton
+                  color='primary'
+                  aria-label='upload picture'
+                  component='span'
+                >
+                  <PhotoCamera /> 
+                </IconButton>
+              </label>
               <IconButton
-                color="primary"
-                aria-label="upload picture"
-                component="span"
+                color='error'
+                aria-label='delete picture'
+                onClick={handleDeleteProfileImage}
               >
-                <PhotoCamera />
+                <DeleteIcon />
               </IconButton>
-            </label>
+            </div>
           )}
-          <div className="w-full flex justify-between items-center mb-2 gap-3">
-            {!editing ? (
-              <Typography variant="h6" component="div" className="font-bold">
-                {username}
-              </Typography>
-            ) : (
-              <TextField
-                label={languageConfig.forms.username}
-                color={`primary`}
-                defaultValue={username}
-              />
-            )}
           </div>
 
-          {!editing ? (
-            <Typography variant="body2" color="text.secondary">
-              {phoneNumber}
-            </Typography>
-          ) : (
+          <form
+          ref={formRef}
+            className='flex flex-col gap-4 items-center justify-center border border-blue-200 p-4 w-full bg-blue-200 rounded-lg'
+          >
+            <TextField
+              label={languageConfig.forms.username}
+              {...register('username', {
+                required: languageConfig.forms.errorMessages.username,
+              })}
+              error={!!errors.username}
+              helperText={errors.username ? languageConfig.forms.errorMessages.username : ''}
+              fullWidth
+              disabled={!editing}
+            />
+            <div className='flex flex-row gap-2'>
+              <TextField
+                label={languageConfig.forms.firstName}
+                type={``}
+                {...register('firstName', {
+                  required: languageConfig.forms.errorMessages.firstName,
+                })}
+                error={!!errors.firstName}
+                helperText={errors.firstName ? languageConfig.forms.errorMessages.firstName : ''}
+                disabled={!editing}
+              />
+              <TextField
+                label={languageConfig.forms.lastName}
+                type={``}
+                {...register('lastName')}
+                disabled={!editing}
+              />
+            </div>
             <TextField
               label={languageConfig.forms.phone}
-              color={`primary`}
-              defaultValue={phoneNumber}
+              {...register('phone', {
+                required: languageConfig.forms.errorMessages.phone,
+              })}
+              error={!!errors.phone}
+              fullWidth
+              helperText={errors.phone ? languageConfig.forms.errorMessages.phone : ''}
+              disabled={!editing}
             />
-          )}
-          {!editing ? (
-            <Typography variant="body1" color="text.secondary">
-              {bio}
-            </Typography>
-          ) : (
             <TextField
-              label={languageConfig.bio}
-              color={`primary`}
-              defaultValue={bio}
+              label={languageConfig.forms.bio}
+              multiline
+              rows={4}
+              fullWidth
+              {...register('bio')}
+              disabled={!editing}
             />
-          )}
+            {/* {editing && (
+              <Button
+                type='submit'
+                variant={`contained`}
+                startIcon={<SaveOutlined />}
+              >
+                Save
+              </Button>
+            )} */}
+          </form>
         </CardContent>
       </Card>
     </div>
