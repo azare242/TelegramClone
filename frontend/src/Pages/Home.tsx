@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from "@mui/material";
+import { Alert } from "@mui/material";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import {Button} from '@mui/material'
 import TEL from '../assets/icons8-telegram-96.png'
@@ -7,6 +7,7 @@ import React from "react";
 import { LanguageConfig } from "../Config/Languages/LanguageProvider";
 import { useLanguage } from "../Config/Languages/useLanguage";
 import GithubLink from "../Components/Github/GithubLink";
+import { toast } from "react-toastify";
 
 const HomePage = () => {
   const {language, FA, EN} = useLanguage();
@@ -17,6 +18,10 @@ const HomePage = () => {
   const [searchParams] = useSearchParams();
   const login_error: boolean =
     searchParams.get("login_error") === "1" ? true : false;
+
+    React.useEffect(() => {
+      if (login_error) toast.error(languageConfig.snackbars.pleaseLogin)
+    }, [languageConfig.snackbars.pleaseLogin, login_error]) 
   return (
     <div className="flex flex-col items-center justify-center h-[30rem] w-[45rem] mt-[5rem] border-2  bg-white/30 backdrop-blur-sm rounded-2xl border-blue-500 gap-10">
     <div className="w-[15rem] flex flex-col items-center justify-center text-center gap-4">
@@ -38,15 +43,7 @@ const HomePage = () => {
     <div className="mt-5">
       <GithubLink/>
     </div>
-    <Snackbar
-      open={login_error}
-      autoHideDuration={5000}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
-    >
-      <Alert severity={`error`} sx={{ width: "100%" }}>
-        {languageConfig.snackbars.pleaseLogin}
-      </Alert>
-    </Snackbar>
+
   </div>
   )
 };

@@ -6,7 +6,6 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
-  Snackbar,
   Alert,
 } from "@mui/material";
 
@@ -15,6 +14,7 @@ import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import LoadingInButton from '../Loading/LodingInButton'
 import { useAPI } from "../../Actions/API/useAPI";
+import { toast } from "react-toastify";
 const Register = () => {
   const navigate = useNavigate();
   const {
@@ -26,27 +26,13 @@ const Register = () => {
 
   const {signup} = useAPI()
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<number>(-1);
   const { language, FA, EN } = useLanguage();
   const [loading, setLoading] = React.useState<boolean>(false);
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
     else return EN as LanguageConfig;
   }, [EN, FA, language]);
-  const closeSnackBarHandler = () => {
-    switch (success) {
-      case 0:
-        setSuccess(-1);
-        break;
-      case 1:
-        setSuccess(-1);
-        navigate("/login");
-        break;
-      default:
-        setSuccess(-1);
-        break;
-    }
-  };
+
 
   const onSubmit: SubmitHandler<RegisterFormValues> = async (
     data: RegisterFormValues
@@ -55,8 +41,8 @@ const Register = () => {
     setLoading(true)
     const res = signup === null ? {success: false, message: "unknown error", data: undefined} : await signup(data, true);
     
-    if (res.success) setSuccess(1)
-    else setSuccess(0)
+    if (res.success) toast.success("success")
+    else toast.error("unsuccess")
     setLoading(false)
   };
 
@@ -126,21 +112,7 @@ const Register = () => {
         </Button>
       </Link>
 
-      <Snackbar
-        open={success !== -1}
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        onClose={closeSnackBarHandler}
-      >
-        <Alert
-          severity={success === 1 ? "success" : "error"}
-          onClose={closeSnackBarHandler}
-        >
-          {success === 1
-            ? languageConfig.snackbars.registerSuccess
-            : languageConfig.snackbars.registerError}
-        </Alert>
-      </Snackbar>
+
     </div>
   );
 };

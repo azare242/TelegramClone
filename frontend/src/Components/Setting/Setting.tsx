@@ -14,6 +14,8 @@ import { LanguageConfig } from '../../Config/Languages/LanguageProvider';
 import { PhotoCamera, SaveOutlined } from '@mui/icons-material';
 import { UserInfo, UserInfoFormValues } from '../../Types/inedx';
 import { useForm } from 'react-hook-form';
+import { useAPI } from '../../Actions/API/useAPI';
+import { toast } from 'react-toastify';
 
 const SettingsMenu: React.FC<{
   userInfo: UserInfo;
@@ -24,7 +26,7 @@ const SettingsMenu: React.FC<{
   const languageConfig = React.useMemo<LanguageConfig>(() => {
     return language === 'FA' ? (FA as LanguageConfig) : (EN as LanguageConfig);
   }, [EN, FA, language]);
-
+  const {updateUser} = useAPI();
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       const fileReader = new FileReader();
@@ -65,9 +67,11 @@ const SettingsMenu: React.FC<{
               console.log('c', editing);
               if (editing) {
                 formRef.current && handleSubmit(
-                  (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
+                  async (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
                     event?.preventDefault();
-                    console.log(data);
+                    const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, true);
+                    if (res.success) toast.success("success")
+                    else console.log(res.message)
                     setEditing(false);
                   }
                 )()

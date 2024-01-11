@@ -42,6 +42,6 @@ export interface UserInfo  extends UserInfoFormValues {
 export interface Response<T> {
   success: boolean,
   message: string,
-  data: T
+  data: T | undefined
 }
 

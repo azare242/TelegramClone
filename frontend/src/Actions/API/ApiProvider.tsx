@@ -1,7 +1,7 @@
 import React from "react";
 import axios from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
-import { LoginFormValues, RegisterFormValues, Response } from "../../Types/inedx";
+import { LoginFormValues, RegisterFormValues, Response, UserInfo, UserInfoFormValues } from "../../Types/inedx";
 export const ApiProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -63,11 +63,56 @@ export const ApiProvider: React.FC<{
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [])
-  const context = {
+
+
+  const settingsPageInfo = React.useCallback(async (mock: boolean = false): Promise<Response<UserInfo>> => {
+    try {
+      const res = await axios.request({
+        url: mock ? "http://127.0.0.1:3000/mock/userinfo" : `${BASE_URL_HTTP}${""}`,
+        method: mock ? "GET" : "GET",
+        headers: {
+          "Authorization": `Bearer ${jsonWebToken}`
+        }
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "fetch successfully", data: res.data.data}
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      return {success: false, message: e.response.data.message, data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
+
+
+  const updateUser = React.useCallback(async (form: UserInfoFormValues ,mock: boolean = false) => {
+    try {
+      const res = await axios.request({
+        url: mock ? "http://127.0.0.1:3000/mock/updateuser" : `${BASE_URL_HTTP}${""}`,
+        method: mock ? "PUT" : "PUT",
+        headers: {
+          "Authorization": `Bearer ${jsonWebToken}`
+        },
+        data: {...form}
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "fetch successfully", data: res.data.data}
+      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      return {success: false, message: e.response.data.message, data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
+  const context: APIContextInterface = {
     jsonWebToken,
     login,
     logout,
-    signup
+    signup,
+    settingsPageInfo,
+    updateUser
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -78,10 +123,14 @@ interface APIContextInterface {
   login:( (form: LoginFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
   logout: (() => void) | null
   signup: ((form: RegisterFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
+  settingsPageInfo:  ((mock?: boolean) => Promise<Response<UserInfo>>) | null
+  updateUser: ((form: UserInfoFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
   login: null,
   logout: null,
-  signup: null
+  signup: null,
+  settingsPageInfo: null,
+  updateUser: null,
 });

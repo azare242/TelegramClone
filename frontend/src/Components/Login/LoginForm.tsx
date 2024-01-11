@@ -6,7 +6,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
-  Snackbar,
+
   TextField,
 } from "@mui/material";
 
@@ -15,6 +15,7 @@ import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import LodingInButton from "../Loading/LodingInButton";
 import { useAPI } from "../../Actions/API/useAPI";
+import { toast } from "react-toastify";
 const LoginForm = () => {
   const navigate = useNavigate();
   const {
@@ -25,27 +26,13 @@ const LoginForm = () => {
 
   const {login} = useAPI()
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
-  const [success, setSuccess] = React.useState<number>(-1);
   const [loading, setLoding] = React.useState<boolean>(false)
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
     else return EN as LanguageConfig;
   }, [EN, FA, language]);
-  const closeSnackBarHandler = () => {
-    switch (success) {
-      case 0:
-        setSuccess(-1);
-        break;
-      case 1:
-        setSuccess(-1);
-        setTimeout(() => navigate('/'), 1000) // Navigate to the main page or any other desired route
-        break;
-      default:
-        setSuccess(-1);
-        break;
-    }
-  };
+
 
   const onSubmit: SubmitHandler<LoginFormValues> =  async (data: LoginFormValues) => {
     // Add your login logic here
@@ -56,8 +43,8 @@ const LoginForm = () => {
     
     const res = login === null ? {success: false, message: "unknown error", data: undefined} : await login(data, true);
 
-    if (res?.success) setSuccess(1);
-    else setSuccess(0)
+    if (res?.success) toast.success("success")
+    else toast.error("unsuccess")
 
     setLoding(false);
   };
@@ -102,21 +89,7 @@ const LoginForm = () => {
         </Button>
       </Link>
 
-      <Snackbar
-        open={success !== -1}
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        onClose={closeSnackBarHandler}
-      >
-        <Alert
-          severity={success === 1 ? "success" : "error"}
-          onClose={closeSnackBarHandler}
-        >
-          {success === 1
-            ? languageConfig.snackbars.loginSucces
-            : languageConfig.snackbars.loginError}
-        </Alert>
-      </Snackbar>
+
     </div>
   );
 };
