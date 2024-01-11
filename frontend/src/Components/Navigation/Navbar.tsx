@@ -13,7 +13,7 @@ import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import TranslateIcon from '@mui/icons-material/Translate';
 import { Book } from "@mui/icons-material";
 const Navbar = () => {
-  const { jsonWebToken } = useAPI();
+  const { jsonWebToken, logout} = useAPI();
   const { language, FA, EN , setLanguage } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>((): LanguageConfig => {
     if (language === "FA") return FA as LanguageConfig;
@@ -48,6 +48,12 @@ const Navbar = () => {
     setAnchorElLANG(null);
   }; 
 
+
+  const handleMenuCloseUser = () => {
+    setAnchorEl(null)
+  }
+
+  
 
   return (
     <>
@@ -124,14 +130,18 @@ const Navbar = () => {
                   horizontal: 'right',
                 }}
                 open={isMenuOpen}
-                onClose={handleMenuClose}
+                onClose={handleMenuCloseLANG}
               >
                   <MenuItem onClick={() => {
                     navigate("/settings")
-                    handleMenuClose()
+                    handleMenuCloseUser()
 
                   }}>{languageConfig.settings}</MenuItem>
-                  <MenuItem onClick={()=>{handleMenuClose()}}>{languageConfig.logout}</MenuItem>
+                  <MenuItem onClick={()=>{
+                    logout !== null && logout();
+                    logout !== null && console.log("AA")
+                    handleMenuCloseUser()
+                    }}>{languageConfig.logout}</MenuItem>
                 </Menu></>
             )
           }

@@ -14,14 +14,16 @@ import { LoginFormValues } from "../../Types/inedx";
 import { useLanguage } from "../../Config/Languages/useLanguage";
 import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import LodingInButton from "../Loading/LodingInButton";
+import { useAPI } from "../../Actions/API/useAPI";
 const LoginForm = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormValues>();
 
+  const {login} = useAPI()
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [success, setSuccess] = React.useState<number>(-1);
   const [loading, setLoding] = React.useState<boolean>(false)
@@ -45,16 +47,19 @@ const LoginForm = () => {
     }
   };
 
-  const onSubmit: SubmitHandler<LoginFormValues> = (data: LoginFormValues) => {
+  const onSubmit: SubmitHandler<LoginFormValues> =  async (data: LoginFormValues) => {
     // Add your login logic here
     // For example, you can send a request to your authentication API
     // and handle success or error accordingly
     setLoding(true)
     console.log(data);
-    setTimeout(() => {
-      setLoding(false)
-      setSuccess(1)
-    }, 2000)  
+    
+    const res = login === null ? {success: false, message: "unknown error"} : await login(data.username, data.password, true);
+
+    if (res?.success) setSuccess(1);
+    else setSuccess(0)
+
+    setLoding(false);
   };
 
   
