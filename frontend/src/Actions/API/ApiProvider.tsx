@@ -14,11 +14,9 @@ export const ApiProvider: React.FC<{
   React.useEffect(() => {
     jsonWebToken
       && localStorage.setItem("mytel-jwt", jsonWebToken)
-    
+    if (jsonWebToken !== null) localStorage.setItem("mytel-jwt", jsonWebToken)
+    else localStorage.removeItem("mytel-jwt")
   }, [jsonWebToken]);
-
-
-
 
   const login = React.useCallback(async (form: LoginFormValues, mock: boolean = false): Promise<Response<undefined>> => {
 
@@ -33,11 +31,11 @@ export const ApiProvider: React.FC<{
         setJsonWebToken(res.data.access_token)
         return {success: true, message: "login successfully", data: undefined}
       } else if (res.status === 401) {
-
         return {success: false, message: "wrong password", data: undefined}
       } else if (res.status === 404) {
         return {success: false , message: "user not found", data: undefined}
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return {success: false, message: e.response.data.message, data: undefined}
     }
@@ -45,7 +43,6 @@ export const ApiProvider: React.FC<{
   }, [])
 
   const logout = () => {
-    localStorage.removeItem("mytel-jwt")
     setJsonWebToken(null);
   }
 
@@ -60,6 +57,7 @@ export const ApiProvider: React.FC<{
       if (res.status === 200) {
         return {success: true, message: "register successfully", data: undefined}
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
       return {success: false, message: e.response.data.message, data: undefined}
     }
