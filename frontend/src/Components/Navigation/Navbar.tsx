@@ -141,6 +141,7 @@ const Navbar = () => {
                     logout !== null && logout();
                     logout !== null && console.log("AA")
                     handleMenuCloseUser()
+                    navigate("/")
                     }}>{languageConfig.logout}</MenuItem>
                 </Menu></>
             )

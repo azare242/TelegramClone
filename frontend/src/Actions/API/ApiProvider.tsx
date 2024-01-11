@@ -1,7 +1,10 @@
 import React from "react";
 import axios from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
-
+export interface Response {
+  success: boolean,
+  message: string
+}
 export const ApiProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -20,7 +23,7 @@ export const ApiProvider: React.FC<{
 
 
 
-  const login = React.useCallback(async (username: string, password: string, mock: boolean = false) => {
+  const login = React.useCallback(async (username: string, password: string, mock: boolean = false): Promise<Response> => {
 
     try {
       const res = await axios.request({
@@ -42,6 +45,7 @@ export const ApiProvider: React.FC<{
       console.log(e)
       return {success: false, message: e.response.data.message}
     }
+    return {success: false, message: "unknown error"}
   }, [])
 
   const logout = () => {
@@ -59,10 +63,7 @@ export const ApiProvider: React.FC<{
 
 interface APIContextInterface {
   jsonWebToken: string | null;
-  login:( (username: string, password: string, mock?: boolean) => Promise<{
-    success: boolean;
-    message: string;
-} | undefined>) | null
+  login:( (username: string, password: string, mock?: boolean) => Promise<Response>) | null
   logout: (() => void) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({

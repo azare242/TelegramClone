@@ -16,7 +16,7 @@ import { LanguageConfig } from "../../Config/Languages/LanguageProvider";
 import LodingInButton from "../Loading/LodingInButton";
 import { useAPI } from "../../Actions/API/useAPI";
 const LoginForm = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -39,7 +39,7 @@ const LoginForm = () => {
         break;
       case 1:
         setSuccess(-1);
-        navigate("/"); // Navigate to the main page or any other desired route
+        setTimeout(() => navigate('/'), 1000) // Navigate to the main page or any other desired route
         break;
       default:
         setSuccess(-1);
