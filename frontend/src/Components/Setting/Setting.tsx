@@ -72,8 +72,12 @@ const SettingsMenu: React.FC<{
                     setIsPending(true)
                     event?.preventDefault();
                     const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, true);
-                    if (res.success) toast.success(languageConfig.snackbars.updateUserInfoSuccess)
-                    else toast.error(languageConfig.snackbars.updateUserInfoError)
+                    if (res.success) toast.success(languageConfig.snackbars.updateUserInfoSuccess,  {
+                      position: toast.POSITION.TOP_CENTER,
+                    })
+                    else toast.error(languageConfig.snackbars.updateUserInfoError,  {
+                      position: toast.POSITION.TOP_CENTER,
+                    })
                     setEditing(false);
                     setIsPending(false)
                   }

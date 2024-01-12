@@ -20,7 +20,9 @@ const HomePage = () => {
     searchParams.get("login_error") === "1" ? true : false;
 
     React.useEffect(() => {
-      if (login_error) toast.error(languageConfig.snackbars.pleaseLogin)
+      if (login_error) toast.error(languageConfig.snackbars.pleaseLogin,  {
+        position: toast.POSITION.TOP_CENTER,
+      })
     }, [languageConfig.snackbars.pleaseLogin, login_error]) 
   return (
     <div className="flex flex-col items-center justify-center h-[30rem] w-[45rem] mt-[5rem] border-2  bg-white/30 backdrop-blur-sm rounded-2xl border-blue-500 gap-10">

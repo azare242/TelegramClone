@@ -44,9 +44,13 @@ const Register = () => {
         : await signup(data, true);
 
     if (res.success) {
-      toast.success(languageConfig.snackbars.registerSuccess);
+      toast.success(languageConfig.snackbars.registerSuccess,  {
+        position: toast.POSITION.TOP_CENTER,
+      });
       navigate("/login")
-    } else toast.error(languageConfig.snackbars.registerError);
+    } else toast.error(languageConfig.snackbars.registerError,  {
+      position: toast.POSITION.TOP_CENTER,
+    });
     setLoading(false);
   };
 
