@@ -3,7 +3,8 @@ import React from "react";
 import SettingsMenu from "../Components/Setting/Setting";
 import { useAPI } from "../Actions/API/useAPI";
 import { UserInfo } from "../Types/inedx";
-import LodingInButton from "../Components/Loading/LodingInButton";
+import LoadingInPage from "../Components/Loading/LoadingInPage";
+import { toast } from "react-toastify";
 const Settings = () => {
 
   const [loaded, setLoaded] = React.useState<boolean>(false)
@@ -16,6 +17,8 @@ const Settings = () => {
       if (res.success) {
         setUserInfo(res.data as UserInfo)
         setLoaded(true)
+      } else {
+        toast.error("something went wrong")
       }
       
     }
@@ -27,7 +30,7 @@ const Settings = () => {
     <>{
       loaded ? 
        <SettingsMenu userInfo={userInfo as UserInfo}/>
-   : <div className="flex flex-col items-center justify-between m-[5rem] p-20 border-2 rounded-2xl border-blue-500 gap-4 bg-slate-700 bg-opacity-90"><LodingInButton/></div>
+   : <LoadingInPage/>
    } </>
   );
 };
