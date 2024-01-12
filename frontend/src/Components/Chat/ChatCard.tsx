@@ -5,7 +5,8 @@ const ChatCard: React.FC<{
   username: string;
   avatarSrc: string;
   message: string;
-}> = ({ username, avatarSrc, message }) => {
+  time: string;
+}> = ({ username, avatarSrc, message, time }) => {
   return (
     <div className="">
       <Link to="">
@@ -50,7 +51,7 @@ const ChatCard: React.FC<{
             </Typography>
           </CardContent>
           <Typography variant="caption" color="text.secondary">
-            {"11:30 PM"}
+            {`${time}`}
           </Typography>
         </Card>
       </Link>

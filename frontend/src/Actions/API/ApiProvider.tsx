@@ -110,13 +110,56 @@ export const ApiProvider: React.FC<{
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [jsonWebToken])
+
+  const getChats = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
+    try {
+      const res = await axios.request({
+        url: mock ? "http://127.0.0.1:3000/mock/chats" : `${BASE_URL_HTTP}${""}`,
+        method: mock ? "GET" : "GET",
+        headers: {
+          "Authorization": `Bearer ${jsonWebToken}`
+        },
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "fetch successfully", data: res.data.data}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
+  const getGroups = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
+    try {
+      const res = await axios.request({
+        url: mock ? "http://127.0.0.1:3000/mock/groups" : `${BASE_URL_HTTP}${""}`,
+        method: mock ? "GET" : "GET",
+        headers: {
+          "Authorization": `Bearer ${jsonWebToken}`
+        },
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "fetch successfully", data: res.data.data}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
     logout,
     signup,
     settingsPageInfo,
-    updateUser
+    updateUser,
+    getChats,
+    getGroups,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -129,6 +172,8 @@ interface APIContextInterface {
   signup: ((form: RegisterFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
   settingsPageInfo:  ((mock?: boolean) => Promise<Response<UserInfo>>) | null
   updateUser: ((form: UserInfoFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
+  getChats: ((mock?: boolean) => Promise<Response<unknown>>) | null
+  getGroups: ((mock?: boolean) => Promise<Response<unknown>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -137,4 +182,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   signup: null,
   settingsPageInfo: null,
   updateUser: null,
+  getChats: null,
+  getGroups: null
 });

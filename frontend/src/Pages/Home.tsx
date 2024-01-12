@@ -57,7 +57,7 @@ const Home = () => {
 
   React.useEffect(() => {
     if (jsonWebToken !== null) {
-      navigate('/ppllss')
+      navigate('/ppllss/pv')
     }
   }, [jsonWebToken, navigate])
 

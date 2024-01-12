@@ -1,16 +1,8 @@
 import Login from "../../Pages/Login";
 import Register from "../../Pages/Register";
 import Home from "../../Pages/Home";
-import Massenger from "../../Layouts/Massenger";
+import Massenger from "../../Pages/Massenger";
 import Settings from "../../Pages/Settings";
-import ChatCardList from "../../Components/Chat/ChatList";
-import { ChatPageGroup } from "../../Components/Chat/ChatPage";
-import {
-  OtherUserMessage,
-  OtherUserMessageInGroup,
-  UserMessage,
-} from "../../Components/Message/Message";
-import ContactList from "../../Components/Contacts/ContactList";
 import Contacts from "../../Pages/Contacts";
 
 export type AppRouteType = {
@@ -36,123 +28,17 @@ export const publicRoutes: AppRouteType[] = [
     element: <Register />,
   },
   {
-    path: "ppllss",
+    path: "ppllss/:chattype/:id",
     name: "success",
     element: (
-      <Massenger>
-        <ChatCardList
-          chatItems={[
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-            {
-              id: 1,
-              username: "JohnDoe",
-              avatarSrc: "",
-              message: "Hello World!",
-            },
-            { id: 2, username: "JaneDoe", avatarSrc: "", message: "Hi there!" },
-          ]}
-        />
-        <ChatPageGroup gpImage="" gpName="روستای باصفای">
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />{" "}
-          <UserMessage text="hello" />
-          <OtherUserMessageInGroup text="hi" avatarSrc="" />
-        </ChatPageGroup>
-      </Massenger>
+      <Massenger openedChat={true}/>
+    ),
+  },
+  {
+    path: "ppllss/:chattype",
+    name: "success",
+    element: (
+      <Massenger openedChat={false}/>
     ),
   },
   {
@@ -163,6 +49,6 @@ export const publicRoutes: AppRouteType[] = [
   {
     path: "contacts",
     name: "Contacts",
-    element: <Contacts x={1}/>
+    element: <Contacts/>
   }
 ];

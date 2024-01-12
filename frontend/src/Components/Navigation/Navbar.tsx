@@ -69,12 +69,12 @@ const Navbar = () => {
           {jsonWebToken && (
             <ButtonGroup>
               <NavItem
-                path="/ppllss?c=pv"
+                path="/ppllss/pv"
                 name={languageConfig.navbar.privates}
                 icon={<PersonOutlineTwoToneIcon />}
               />
               <NavItem
-                path="/ppllss?c=g"
+                path="/ppllss/group"
                 name={languageConfig.navbar.groups}
                 icon={<GroupsTwoToneIcon />}
               />

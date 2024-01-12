@@ -4,10 +4,10 @@ import { Search } from "@mui/icons-material";
 
 const ChatCardList: React.FC<{
   chatItems: {
-    id: number;
-    username: string;
-    avatarSrc: string;
-    message: string;
+    from: string;
+    image: string;
+    lastMessage: string;
+    time: string
   }[];
 }> = ({ chatItems }) => {
   return (
@@ -19,12 +19,13 @@ const ChatCardList: React.FC<{
         </IconButton>
       </div>
       <div className="flex flex-col gap-0 overflow-y-auto rounded-lg h-full">
-        {chatItems.map((chatItem) => (
+        {chatItems.map((chatItem, index) => (
           <ChatCard
-            key={chatItem.id} // Unique key for each child in a list
-            username={chatItem.username}
-            avatarSrc={chatItem.avatarSrc}
-            message={chatItem.message}
+            key={index} // Unique key for each child in a list
+            username={chatItem.from}
+            avatarSrc={chatItem.image}
+            message={chatItem.lastMessage}
+            time={chatItem.time}
           />
         ))}
       </div>
