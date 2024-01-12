@@ -25,9 +25,9 @@ const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
 
       if (res.success) {
         console.log(res.data);
-        // setChats(res.data)
+        setChats(res.data)
       }
-      // setLoaded(true)
+      setLoaded(true)
     }
     fetch();
   }, [chattype, getChats, getGroups, navigate]);
