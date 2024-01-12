@@ -43,8 +43,8 @@ const LoginForm = () => {
     
     const res = login === null ? {success: false, message: "unknown error", data: undefined} : await login(data, true);
 
-    if (res?.success) toast.success("success")
-    else toast.error("unsuccess")
+    if (res?.success) toast.success(languageConfig.snackbars.loginSucces)
+    else toast.error(languageConfig.snackbars.loginError)
 
     setLoding(false);
   };

@@ -30,6 +30,8 @@ export interface LanguageConfig {
     loginError: string;
     registerSuccess: string;
     registerError: string;
+    updateUserInfoSuccess: string;
+    updateUserInfoError: string;
   };
   forms: {
     firstName: string;
@@ -90,9 +92,12 @@ export const LanguageProvider: React.FC<{
     snackbars: {
       pleaseLogin: "لطفا وارد شوید",
       loginSucces: "ورود موفقیت آمیز بودَ درحال انتقال به صفحه اصلی.",
-      loginError: "اطلاعات نادرست است",
+      loginError: "خطا در ورود",
       registerSuccess: "ثبت نام موفقیت آمیز بود. در حال انقال به صفحه ورود",
       registerError: "خطا در ثبت نام",
+      updateUserInfoSuccess: "برزورسانی موفقیت آمیز بود",
+      updateUserInfoError: "بروزرسانی با خطا مواجه شد",
+
     },
     forms: {
       firstName: "نام",
@@ -149,6 +154,8 @@ export const LanguageProvider: React.FC<{
       registerSuccess:
         "Register Successfully, you will navigate to the login page",
       registerError: "Error in Registration",
+      updateUserInfoSuccess: "Updated",
+      updateUserInfoError: "Update Went Wrong",
     },
     forms: {
       username: "Username",

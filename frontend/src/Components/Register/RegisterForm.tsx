@@ -44,9 +44,9 @@ const Register = () => {
         : await signup(data, true);
 
     if (res.success) {
-      toast.success('success please login');
+      toast.success(languageConfig.snackbars.registerSuccess);
       navigate("/login")
-    } else toast.error('unsuccess');
+    } else toast.error(languageConfig.snackbars.registerError);
     setLoading(false);
   };
 

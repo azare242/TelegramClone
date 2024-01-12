@@ -16,10 +16,11 @@ import { UserInfo, UserInfoFormValues } from '../../Types/inedx';
 import { useForm } from 'react-hook-form';
 import { useAPI } from '../../Actions/API/useAPI';
 import { toast } from 'react-toastify';
-
+import LodingInButton from '../Loading/LodingInButton';
 const SettingsMenu: React.FC<{
   userInfo: UserInfo;
 }> = ({ userInfo }) => {
+  const [isPending, setIsPending] = React.useState<boolean>(false)
   const [editing, setEditing] = React.useState<boolean>(false);
   const [profileImage, setProfileImage] = React.useState<string>('');
   const { language, FA, EN } = useLanguage();
@@ -68,11 +69,13 @@ const SettingsMenu: React.FC<{
               if (editing) {
                 formRef.current && handleSubmit(
                   async (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
+                    setIsPending(true)
                     event?.preventDefault();
                     const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, true);
-                    if (res.success) toast.success("success")
-                    else console.log(res.message)
+                    if (res.success) toast.success(languageConfig.snackbars.updateUserInfoSuccess)
+                    else toast.error(languageConfig.snackbars.updateUserInfoError)
                     setEditing(false);
+                    setIsPending(false)
                   }
                 )()
               } else {
@@ -83,7 +86,10 @@ const SettingsMenu: React.FC<{
               marginTop: 'auto',
             }}
           >
-            {!editing ? <EditIcon /> : <SaveOutlined />}
+            
+            {!isPending && editing && <SaveOutlined/>}
+            {!isPending && !editing && <EditIcon/>}
+            {isPending && <LodingInButton/>}           
           </IconButton>
 
           <div className='flex flex-col items-center border border-blue-200 mb-4 p-1 w-full rounded-lg bg-blue-200'>

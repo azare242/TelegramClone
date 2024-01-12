@@ -1,5 +1,5 @@
 import React from "react";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
 import { LoginFormValues, RegisterFormValues, Response, UserInfo, UserInfoFormValues } from "../../Types/inedx";
 export const ApiProvider: React.FC<{
@@ -35,9 +35,10 @@ export const ApiProvider: React.FC<{
       } else if (res.status === 404) {
         return {success: false , message: "user not found", data: undefined}
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return {success: false, message: e.response.data.message, data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [])
@@ -57,9 +58,10 @@ export const ApiProvider: React.FC<{
       if (res.status === 200) {
         return {success: true, message: "register successfully", data: undefined}
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return {success: false, message: e.response.data.message, data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [])
@@ -78,9 +80,10 @@ export const ApiProvider: React.FC<{
       if (res.status === 200) {
         return {success: true, message: "fetch successfully", data: res.data.data}
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return {success: false, message: e.response.data.message, data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [jsonWebToken])
@@ -100,9 +103,10 @@ export const ApiProvider: React.FC<{
       if (res.status === 200) {
         return {success: true, message: "fetch successfully", data: res.data.data}
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (e: any) {
-      return {success: false, message: e.response.data.message, data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [jsonWebToken])
