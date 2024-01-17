@@ -31,8 +31,8 @@ interface ApiRoutes {
   addMember: ApiRoute;
   kickMember: ApiRoute;
 }
-export const BASE_URL_HTTP = "http://127.0.0.1/api"
-export const BASE_URL_WS = "ws://127.0.0.1/api"
+export const BASE_URL_HTTP = "http://66.248.207.109/api"
+export const BASE_URL_WS = "ws://66.248.207.109/api"
 export const API_ROUTES: ApiRoutes = {
   //USER ROUTES
   register: {

@@ -22,7 +22,7 @@ export const ApiProvider: React.FC<{
 
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/login" : `${BASE_URL_HTTP}${API_ROUTES.login.path}`,
+        url: mock ? "http://66.248.207.109:3000/mock/login" : `${BASE_URL_HTTP}${API_ROUTES.login.path}`,
         method: mock ? "POST" : API_ROUTES.login.method,
         data: {...form}
       })
@@ -50,7 +50,7 @@ export const ApiProvider: React.FC<{
   const signup = React.useCallback( async (form: RegisterFormValues, mock: boolean = false): Promise<Response<undefined>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/register" : `${BASE_URL_HTTP}${API_ROUTES.register.path}`,
+        url: mock ? "http://66.248.207.109:3000/mock/register" : `${BASE_URL_HTTP}${API_ROUTES.register.path}`,
         method: mock ? "POST" : API_ROUTES.register.method,
         data: {...form}
       })
@@ -70,7 +70,7 @@ export const ApiProvider: React.FC<{
   const settingsPageInfo = React.useCallback(async (mock: boolean = false): Promise<Response<UserInfo>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/userinfo" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://66.248.207.109:3000/mock/userinfo" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
           "Authorization": `Bearer ${jsonWebToken}`
@@ -92,7 +92,7 @@ export const ApiProvider: React.FC<{
   const updateUser = React.useCallback(async (form: UserInfoFormValues ,mock: boolean = false) => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/updateuser" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://66.248.207.109:3000/mock/updateuser" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "PUT" : "PUT",
         headers: {
           "Authorization": `Bearer ${jsonWebToken}`
@@ -114,7 +114,7 @@ export const ApiProvider: React.FC<{
   const getChats = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/chats" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://66.248.207.109:3000/mock/chats" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
           "Authorization": `Bearer ${jsonWebToken}`
@@ -134,7 +134,7 @@ export const ApiProvider: React.FC<{
   const getGroups = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/groups" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://66.248.207.109:3000/mock/groups" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
           "Authorization": `Bearer ${jsonWebToken}`
