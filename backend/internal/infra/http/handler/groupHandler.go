@@ -1,19 +1,41 @@
 package handler
 
-import "github.com/labstack/echo/v4"
+import (
+	echo "github.com/labstack/echo/v4"
 
-func NewGroup(c echo.Context) error {
+	"backend/internal/domain/repository/groupRepo"
+)
+
+type Group struct {
+	repo groupRepo.Repository
+}
+
+func NewGroup(repo groupRepo.Repository) *Group {
+	return &Group{
+		repo,
+	}
+}
+
+func (g *Group) NewGroup(c echo.Context) error {
 	return nil
 }
 
-func DeleteGroup(c echo.Context) error {
+func (g *Group) DeleteGroup(c echo.Context) error {
 	return nil
 }
 
-func AddUserToGroup(c echo.Context) error {
+func (g *Group) AddUserToGroup(c echo.Context) error {
 	return nil
 }
 
-func DeleteUserFromGroup(c echo.Context) error {
+func (g *Group) DeleteUserFromGroup(c echo.Context) error {
 	return nil
+}
+
+func (g *Group) NewGroupHandler(gr *echo.Group) {
+	GroupsGroup := gr.Group("/groups")
+	GroupsGroup.POST("/", g.NewGroup)
+	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
+	GroupsGroup.PATCH("/:groupid", g.AddUserToGroup)
+	GroupsGroup.DELETE("/:groupid/:userid", g.DeleteUserFromGroup)
 }

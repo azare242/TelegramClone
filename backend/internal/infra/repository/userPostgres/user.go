@@ -4,6 +4,7 @@ import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/userRepo"
 	"context"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"time"
 )
@@ -56,6 +57,7 @@ func (u *Repository) Create(ctx context.Context, user model.User) error {
 
 	result := u.db.WithContext(ctx).Create(userDTO)
 	if result.Error != nil {
+		log.Warnln(result.Error)
 		return result.Error
 	}
 

@@ -16,5 +16,5 @@ type User struct {
 	Phone          string `gorm:"type:varchar(255);not null;unique" json:"phone"`
 	IsActive       bool   `gorm:"type:boolean;not null;default:false" json:"isActive"`
 	Biography      string `gorm:"type:varchar(255);default:''" json:"biography"`
-	ProfilePicture string `gorm:"type:varchar(255)" json:"profilePicture"`
+	ProfilePicture string `gorm:"type:varchar(255);default:''" json:"profilePicture"`
 }

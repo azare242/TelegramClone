@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/labstack/echo/v4"
-	log "github.com/sirupsen/logrus"
 	"time"
+
+	echo "github.com/labstack/echo/v4"
+	log "github.com/sirupsen/logrus"
 )
 
 func CustomLoggerMiddleware(next echo.HandlerFunc) echo.HandlerFunc {

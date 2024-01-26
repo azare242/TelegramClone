@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"github.com/labstack/echo/v4"
 	"net/http"
+
+	echo "github.com/labstack/echo/v4"
 )
 
 func Healthz(c echo.Context) error {
