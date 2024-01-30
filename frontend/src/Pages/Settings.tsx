@@ -12,7 +12,7 @@ const Settings = () => {
   const { settingsPageInfo } = useAPI();
   React.useEffect(() => {
     async function fetch() {
-      const res = settingsPageInfo === null ? {success: false, message: "unknown error", data: undefined} : await settingsPageInfo(true);
+      const res = settingsPageInfo === null ? {success: false, message: "unknown error", data: undefined} : await settingsPageInfo();
       console.log(res)
       if (res.success) {
         setUserInfo(res.data as UserInfo)

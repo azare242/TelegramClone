@@ -28,11 +28,12 @@ export interface UserInfoFormValues {
   firstName: string
   lastName: string
   phone: string
-  bio: string
+  biography: string
 }
 
 export interface UserInfo  extends UserInfoFormValues {
   image: string
+  userID: number
 }
 
 

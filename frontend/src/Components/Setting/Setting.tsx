@@ -46,7 +46,7 @@ const SettingsMenu: React.FC<{
   } = useForm<UserInfoFormValues>({
     defaultValues: {
       username: userInfo ? userInfo.username : "",
-      bio: userInfo ? userInfo.bio : "",
+      biography: userInfo ? userInfo.biography : "",
       firstName: userInfo ? userInfo.firstName : "",
       lastName: userInfo ? userInfo.lastName : "",
       phone: userInfo ? userInfo.phone : "",
@@ -179,7 +179,7 @@ const SettingsMenu: React.FC<{
               multiline
               rows={4}
               fullWidth
-              {...register('bio')}
+              {...register('biography')}
               disabled={!editing}
             />
             {/* {editing && (

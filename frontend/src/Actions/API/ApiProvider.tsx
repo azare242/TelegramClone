@@ -32,6 +32,9 @@ export const ApiProvider: React.FC<{
       if (res.status === 200) {
         console.log(res.data)
         setJsonWebToken(res.data.token)
+        localStorage.setItem("mytel-userid", res.data.userID)
+        localStorage.setItem("mytel-username", res.data.username)
+
         return {success: true, message: "login successfully", data: undefined}
       } else if (res.status === 401) {
         return {success: false, message: "wrong password", data: undefined}
@@ -48,6 +51,9 @@ export const ApiProvider: React.FC<{
 
   const logout = () => {
     setJsonWebToken(null);
+    localStorage.removeItem("mytel-userid")
+    localStorage.removeItem("mytel-username")
+
   }
 
   const signup = React.useCallback( async (form: RegisterFormValues, mock: boolean = false): Promise<Response<undefined>> => {
@@ -75,9 +81,11 @@ export const ApiProvider: React.FC<{
 
   const settingsPageInfo = React.useCallback(async (mock: boolean = false): Promise<Response<UserInfo>> => {
     
+    const userid = localStorage.getItem("mytel-userid")
+    if (!userid) return {success: false, message: "unknown error", data: undefined}
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/userinfo" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://127.0.0.1:3000/mock/userinfo" : `${BASE_URL_HTTP}${API_ROUTES.getUser.path.replace("$1", userid)}`,
         method: mock ? "GET" : "GET",
         headers: {
           "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
@@ -85,7 +93,16 @@ export const ApiProvider: React.FC<{
       })
 
       if (res.status === 200) {
-        return {success: true, message: "fetch successfully", data: res.data.data}
+        console.log(res.data)
+        return {success: true, message: "fetch successfully", data: {
+          userID: res.data.userID,
+          username: res.data.username,
+          biography: res.data.biography,
+          image: "",
+          firstName: "",
+          lastName: "",
+          phone: res.data.phone
+        }}
       }
     } catch (e) {
       if (e instanceof AxiosError)
@@ -98,9 +115,11 @@ export const ApiProvider: React.FC<{
 
   const updateUser = React.useCallback(async (form: UserInfoFormValues ,mock: boolean = false) => {
     const formValuesData = objectToForm<UserInfoFormValues>(form)
+    const username = localStorage.getItem("mytel-username")
+    if (!username) return {success: false, message: "unknown error", data: undefined}
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/updateuser" : `${BASE_URL_HTTP}${""}`,
+        url: mock ? "http://127.0.0.1:3000/mock/updateuser" : `${BASE_URL_HTTP}${API_ROUTES.updateUser.path.replace("$1", username)}`,
         method: mock ? "PUT" : "PATCH",
         headers: {
           "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
