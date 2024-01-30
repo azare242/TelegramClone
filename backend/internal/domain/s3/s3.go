@@ -2,15 +2,16 @@ package s3
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	log "github.com/sirupsen/logrus"
-	"io"
-	"mime/multipart"
-	"os"
 )
 
 func ConnectS3(accessKey, secretKey, region, endpoint string) (*session.Session, error) {

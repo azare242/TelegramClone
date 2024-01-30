@@ -4,9 +4,10 @@ import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/userRepo"
 	"context"
+	"time"
+
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
-	"time"
 )
 
 type Repository struct {
@@ -96,7 +97,7 @@ func (u *Repository) Get(ctx context.Context, cmd userRepo.GetCommand) ([]model.
 
 func (u *Repository) Update(ctx context.Context, user model.User) error {
 	var condition UserDTO
-	condition.UserID = user.UserID
+	condition.Username = user.Username
 
 	dto := UserDTO{
 		User:      user,
