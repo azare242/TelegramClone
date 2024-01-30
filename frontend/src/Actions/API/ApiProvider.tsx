@@ -80,7 +80,7 @@ export const ApiProvider: React.FC<{
         url: mock ? "http://127.0.0.1:3000/mock/userinfo" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
-          "Authorization": `Bearer ${jsonWebToken}`
+          "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         }
       })
 
@@ -103,7 +103,7 @@ export const ApiProvider: React.FC<{
         url: mock ? "http://127.0.0.1:3000/mock/updateuser" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "PUT" : "PATCH",
         headers: {
-          "Authorization": `Bearer ${jsonWebToken}`
+          "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         },
         data: mock ? {...form} : formValuesData
       })
@@ -125,7 +125,7 @@ export const ApiProvider: React.FC<{
         url: mock ? "http://127.0.0.1:3000/mock/chats" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
-          "Authorization": `Bearer ${jsonWebToken}`
+          "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         },
       })
 
@@ -145,7 +145,7 @@ export const ApiProvider: React.FC<{
         url: mock ? "http://127.0.0.1:3000/mock/groups" : `${BASE_URL_HTTP}${""}`,
         method: mock ? "GET" : "GET",
         headers: {
-          "Authorization": `Bearer ${jsonWebToken}`
+          "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         },
       })
 
