@@ -176,6 +176,37 @@ func (u *User) UpdateUser(c echo.Context) error {
 	return c.String(http.StatusOK, "user updated successfuly")
 }
 
+func (u *User) GetUserPfpf(c echo.Context) error {
+	username := c.Param("username")
+
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	pfp := users[0].ProfilePicture
+
+	conf, err := config.LoadConfig()
+	if err != nil {
+		log.Errorln("cant open config file")
+	}
+
+	sess, err := s3.ConnectS3(conf.S3.AccessKey, conf.S3.SecretKey, conf.S3.Region, conf.S3.Endpoint)
+	if err != nil {
+		log.Errorln("can not connect to S3")
+		return echo.ErrInternalServerError
+	}
+	_, err = s3.DownloadS3(sess, conf.S3.Bucket, pfp)
+	if err != nil {
+		log.Errorln("can not download from s3")
+		return echo.ErrInternalServerError
+	}
+
+	return c.File("./resources/profile/" + pfp)
+}
+
 func (u *User) DeleteUser(c echo.Context) error {
 	return nil
 }
@@ -205,6 +236,7 @@ func (u *User) NewUserHandler(g *echo.Group) {
 	userGroup.GET("/:username", u.GetUserByID)
 	userGroup.PATCH("/:username", u.UpdateUser)
 	userGroup.DELETE("/:username", u.DeleteUser)
+	userGroup.GET("/pfp/:username", u.GetUserPfpf)
 	userGroup.GET("/", u.GetUserByKey)
 
 	// users contact list endpoints

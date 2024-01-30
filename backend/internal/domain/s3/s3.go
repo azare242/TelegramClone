@@ -57,7 +57,7 @@ func UploadS3(sess *session.Session, fileHeader *multipart.FileHeader, bucket st
 func DownloadS3(sess *session.Session, bucket string, key string) (*os.File, error) {
 	getwd, _ := os.Getwd()
 
-	file, err := os.Create(getwd + "/../resources/profile/" + key)
+	file, err := os.Create(getwd + "/resources/profile/" + key)
 	if err != nil {
 		log.Warnf("Unable to open file %q, %v", key, err)
 		return nil, err
