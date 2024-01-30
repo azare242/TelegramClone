@@ -4,6 +4,7 @@ import (
 	echo "github.com/labstack/echo/v4"
 
 	"backend/internal/domain/repository/groupRepo"
+	"backend/internal/infra/http/helper"
 )
 
 type Group struct {
@@ -17,6 +18,11 @@ func NewGroup(repo groupRepo.Repository) *Group {
 }
 
 func (g *Group) NewGroup(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	return nil
 }
 

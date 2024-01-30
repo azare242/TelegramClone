@@ -253,6 +253,11 @@ func (u *User) GetUserByKey(c echo.Context) error {
 }
 
 func (u *User) GetUserContacts(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
