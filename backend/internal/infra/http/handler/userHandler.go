@@ -8,6 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"backend/internal/domain/model"
+	"backend/internal/domain/repository/contactRepo"
 	"backend/internal/domain/repository/userRepo"
 	"backend/internal/domain/s3"
 	"backend/internal/infra/config"
@@ -15,12 +16,14 @@ import (
 )
 
 type User struct {
-	repo userRepo.Repository
+	repo        userRepo.Repository
+	contactRepo contactRepo.Repository
 }
 
-func NewUser(repo userRepo.Repository) *User {
+func NewUser(repo userRepo.Repository, contactRepo contactRepo.Repository) *User {
 	return &User{
-		repo,
+		contactRepo: contactRepo,
+		repo:        repo,
 	}
 }
 
@@ -234,17 +237,115 @@ func (u *User) GetUserByKey(c echo.Context) error {
 }
 
 func (u *User) GetUserContacts(c echo.Context) error {
-	_ = c.Param("username")
+	username := c.Param("username")
 
-	return nil
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	contacts, err := u.contactRepo.Get(c.Request().Context(), contactRepo.GetCommand{
+		UserID: &users[0].UserID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, contacts)
 }
 
 func (u *User) NewUserContact(c echo.Context) error {
-	return nil
+	username := c.Param("username")
+
+	contactUsername := c.FormValue("username")
+
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+	contactUsers, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &contactUsername,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	oldContact, err := u.contactRepo.Get(c.Request().Context(), contactRepo.GetCommand{
+		UserID:        &users[0].UserID,
+		ContactUserID: &contactUsers[0].UserID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(oldContact) != 0 {
+		return c.String(http.StatusConflict, "contact already exist")
+	}
+
+	if err := u.contactRepo.Create(c.Request().Context(), model.Contact{
+		UserID:        users[0].UserID,
+		ContactUserID: contactUsers[0].UserID,
+		Status:        model.Pending,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.String(http.StatusCreated, "contact created")
 }
 
 func (u *User) DeleteUserContact(c echo.Context) error {
-	return nil
+	username := c.Param("username")
+
+	id, err := strconv.ParseUint(c.Param("contactid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if err = u.contactRepo.Delete(c.Request().Context(), contactRepo.GetCommand{
+		UserID:        &users[0].UserID,
+		ContactUserID: &id,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.String(http.StatusOK, "deleted contact successfuly")
+}
+
+func (u *User) UpdateContact(c echo.Context) error {
+	username := c.Param("username")
+
+	id, err := strconv.ParseUint(c.Param("contactid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if err := u.contactRepo.Update(c.Request().Context(), model.Contact{
+		UserID:        users[0].UserID,
+		ContactUserID: id,
+		Status:        model.Accepted,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.String(http.StatusOK, "contact status updated")
 }
 
 func (u *User) NewUserHandler(g *echo.Group) {
@@ -263,4 +364,5 @@ func (u *User) NewUserHandler(g *echo.Group) {
 	userGroup.GET("/:username/contacts", u.GetUserContacts)
 	userGroup.POST("/:username/contacts", u.NewUserContact)
 	userGroup.DELETE("/:username/contacts/:contactid", u.DeleteUserContact)
+	userGroup.PATCH("/:username/contacts/:contactid", u.UpdateContact)
 }

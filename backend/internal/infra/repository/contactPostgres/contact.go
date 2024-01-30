@@ -4,8 +4,9 @@ import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/contactRepo"
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -70,7 +71,6 @@ func (c *Repository) Get(ctx context.Context, cmd contactRepo.GetCommand) ([]mod
 		condition.Status = *cmd.Status
 	}
 
-
 	result := c.db.WithContext(ctx).Where(&condition).Find(&contactDTOs)
 	if result.Error != nil {
 		return nil, result.Error
@@ -87,9 +87,11 @@ func (c *Repository) Get(ctx context.Context, cmd contactRepo.GetCommand) ([]mod
 func (c *Repository) Update(ctx context.Context, contact model.Contact) error {
 	var condition ContactDTO
 	condition.ContactID = contact.ContactID
+	condition.UserID = contact.UserID
+	condition.ContactUserID = contact.ContactUserID
 
 	dto := ContactDTO{
-		Contact:      contact,
+		Contact:   contact,
 		UpdatedAt: time.Now(),
 	}
 
@@ -109,6 +111,9 @@ func (c *Repository) Delete(ctx context.Context, cmd contactRepo.GetCommand) err
 	}
 	if cmd.UserID != nil {
 		condition.UserID = *cmd.UserID
+	}
+	if cmd.UserID != nil {
+		condition.ContactUserID = *cmd.ContactUserID
 	}
 	if cmd.Status != nil {
 		condition.Status = *cmd.Status

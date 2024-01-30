@@ -6,9 +6,10 @@ import (
 )
 
 type GetCommand struct {
-	ID 	 *uint64
-	UserID 	 *uint64
-	Status 	 *model.Status
+	ID            *uint64
+	UserID        *uint64
+	ContactUserID *uint64
+	Status        *model.Status
 }
 
 type Repository interface {

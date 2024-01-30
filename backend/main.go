@@ -41,7 +41,7 @@ func main() {
 
 	//repom := messagePostgres.New(db)
 	//repog := groupPostgres.New(db)
-	//repoc := contactPostgres.New(db)
+	repoc := contactPostgres.New(db)
 	//repoug := userGroupPostgres.New(db)
 	//repogc := groupChatPostgres.New(db)
 	//repouc := userChatPostgres.New(db)
@@ -60,7 +60,7 @@ func main() {
 	//	log.Fatalf("failed to connect database %v", err)
 	//}
 
-	hu := handler.NewUser(repou)
+	hu := handler.NewUser(repou, repoc)
 	hu.NewUserHandler(e.Group("/api"))
 
 	//hg := handler.NewGroup(repog)
