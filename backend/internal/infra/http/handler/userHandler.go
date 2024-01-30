@@ -82,7 +82,9 @@ func (u *User) LoginUser(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, echo.Map{
-		"token": token,
+		"token":    token,
+		"username": users[0].Username,
+		"userID":   users[0].UserID,
 	})
 }
 

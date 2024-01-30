@@ -27,7 +27,7 @@ func (ch *Chat) NewChat(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
-	reciverID, err := strconv.ParseUint(c.Param("id"), 10, 64)
+	reciverID, err := strconv.ParseUint(c.FormValue("id"), 10, 64)
 	if err != nil {
 		return echo.ErrBadRequest
 	}
@@ -57,15 +57,69 @@ func (ch *Chat) NewChat(c echo.Context) error {
 }
 
 func (ch *Chat) GetChat(c echo.Context) error {
-	return nil
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return echo.ErrNotFound
+	}
+
+	return c.JSON(http.StatusOK, chats)
 }
 
 func (ch *Chat) GetChats(c echo.Context) error {
-	return nil
+	id, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+	userid := uint64(id)
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		UserID: &userid,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return echo.ErrNotFound
+	}
+
+	return c.JSON(http.StatusOK, chats)
 }
 
 func (ch *Chat) DeleteChat(c echo.Context) error {
-	return nil
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err = ch.repo.Delete(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.String(http.StatusOK, "chat deleted")
 }
 
 func (ch *Chat) DeleteChatMessage(c echo.Context) error {
