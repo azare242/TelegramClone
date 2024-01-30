@@ -87,10 +87,16 @@ func (u *User) LoginUser(c echo.Context) error {
 }
 
 func (u *User) GetUserByID(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	id, err := strconv.ParseUint(c.Param("userid"), 10, 64)
 	if err != nil {
 		return echo.ErrBadRequest
 	}
+
 	// username := c.Param("username")
 
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
@@ -114,6 +120,11 @@ func (u *User) GetUserByID(c echo.Context) error {
 }
 
 func (u *User) UpdateUser(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	ph := c.FormValue("phone")
@@ -212,6 +223,11 @@ func (u *User) GetUserPfpf(c echo.Context) error {
 }
 
 func (u *User) DeleteUser(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	if err := u.repo.Delete(c.Request().Context(), userRepo.GetCommand{
@@ -257,6 +273,11 @@ func (u *User) GetUserContacts(c echo.Context) error {
 }
 
 func (u *User) NewUserContact(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	contactUsername := c.FormValue("username")
@@ -298,6 +319,11 @@ func (u *User) NewUserContact(c echo.Context) error {
 }
 
 func (u *User) DeleteUserContact(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	id, err := strconv.ParseUint(c.Param("contactid"), 10, 64)
@@ -323,6 +349,11 @@ func (u *User) DeleteUserContact(c echo.Context) error {
 }
 
 func (u *User) UpdateContact(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
 	username := c.Param("username")
 
 	id, err := strconv.ParseUint(c.Param("contactid"), 10, 64)

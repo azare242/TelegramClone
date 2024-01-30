@@ -38,8 +38,8 @@ func (ch *Chat) DeleteChatMessage(c echo.Context) error {
 
 func (ch *Chat) NewGroupChatHandler(g *echo.Group) {
 	chatGroup := g.Group("/chats")
-	chatGroup.POST("/", ch.NewChat)
-	chatGroup.GET("/", ch.GetChats)
+	chatGroup.POST("", ch.NewChat)
+	chatGroup.GET("", ch.GetChats)
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
 	chatGroup.DELETE("/:chatid/message/:messageid", ch.DeleteChatMessage)
