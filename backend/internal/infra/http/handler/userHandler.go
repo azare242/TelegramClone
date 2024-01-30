@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strconv"
 
 	echo "github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
@@ -83,15 +84,15 @@ func (u *User) LoginUser(c echo.Context) error {
 }
 
 func (u *User) GetUserByID(c echo.Context) error {
-	// id, err := strconv.ParseUint(c.Param("id"), 10, 64)
-	// if err != nil {
-	// 	return echo.ErrBadRequest
-	// }
-	username := c.Param("username")
+	id, err := strconv.ParseUint(c.Param("userid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+	// username := c.Param("username")
 
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
-		ID:       nil,
-		Username: &username,
+		ID:       &id,
+		Username: nil,
 		Phone:    nil,
 		IsActive: nil,
 	})
@@ -208,14 +209,33 @@ func (u *User) GetUserPfpf(c echo.Context) error {
 }
 
 func (u *User) DeleteUser(c echo.Context) error {
-	return nil
+	username := c.Param("username")
+
+	if err := u.repo.Delete(c.Request().Context(), userRepo.GetCommand{
+		Username: &username,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.String(http.StatusOK, "user deleted")
 }
 
 func (u *User) GetUserByKey(c echo.Context) error {
-	return nil
+	keyword := c.QueryParam("keyword")
+
+	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+		Username: &keyword,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, users[0])
 }
 
-func (u *User) GetUserContact(c echo.Context) error {
+func (u *User) GetUserContacts(c echo.Context) error {
+	_ = c.Param("username")
+
 	return nil
 }
 
@@ -233,14 +253,14 @@ func (u *User) NewUserHandler(g *echo.Group) {
 
 	// user endpoints
 	userGroup := g.Group("/users")
-	userGroup.GET("/:username", u.GetUserByID)
+	userGroup.GET("/:userid", u.GetUserByID)
 	userGroup.PATCH("/:username", u.UpdateUser)
 	userGroup.DELETE("/:username", u.DeleteUser)
 	userGroup.GET("/pfp/:username", u.GetUserPfpf)
-	userGroup.GET("/", u.GetUserByKey)
+	userGroup.GET("", u.GetUserByKey)
 
 	// users contact list endpoints
-	userGroup.GET("/:userid/contacts", u.GetUserContact)
-	userGroup.POST("/:userid/contacts", u.NewUserContact)
-	userGroup.DELETE("/:userid/contacts/:contactid", u.DeleteUserContact)
+	userGroup.GET("/:username/contacts", u.GetUserContacts)
+	userGroup.POST("/:username/contacts", u.NewUserContact)
+	userGroup.DELETE("/:username/contacts/:contactid", u.DeleteUserContact)
 }
