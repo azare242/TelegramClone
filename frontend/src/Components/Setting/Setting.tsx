@@ -71,7 +71,7 @@ const SettingsMenu: React.FC<{
                   async (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
                     setIsPending(true)
                     event?.preventDefault();
-                    const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, true);
+                    const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, false);
                     if (res.success) toast.success(languageConfig.snackbars.updateUserInfoSuccess,  {
                       position: toast.POSITION.TOP_CENTER,
                     })

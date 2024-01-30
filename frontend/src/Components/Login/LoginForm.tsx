@@ -41,7 +41,7 @@ const LoginForm = () => {
     setLoding(true)
     console.log(data);
     
-    const res = login === null ? {success: false, message: "unknown error", data: undefined} : await login(data, true);
+    const res = login === null ? {success: false, message: "unknown error", data: undefined} : await login(data, false);
 
     if (res?.success) toast.success(languageConfig.snackbars.loginSucces,  {
       position: toast.POSITION.TOP_CENTER,

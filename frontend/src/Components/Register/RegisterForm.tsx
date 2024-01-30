@@ -41,7 +41,7 @@ const Register = () => {
     const res =
       signup === null
         ? { success: false, message: 'unknown error', data: undefined }
-        : await signup(data, true);
+        : await signup(data, false);
 
     if (res.success) {
       toast.success(languageConfig.snackbars.registerSuccess,  {
