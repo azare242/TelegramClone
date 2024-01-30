@@ -10,6 +10,7 @@ var (
 )
 
 type User struct {
+	Name           string `gorm:"type:varchar(255);not null" json:"name"`
 	UserID         uint64 `gorm:"primaryKey;autoIncrement;not null" json:"userID"`
 	Username       string `gorm:"type:varchar(255);not null;unique" json:"username"`
 	Password       string `gorm:"type:varchar(255);not null" json:"-"`

@@ -63,3 +63,20 @@ func JwtToken(id uint64) (string, error) {
 
 	return tokenString, nil
 }
+
+func DeleteValueFromArray(arr *[]string, value string) {
+	index := -1
+
+	for i, v := range *arr {
+		if v == value {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return
+	}
+
+	*arr = append((*arr)[:index], (*arr)[index+1:]...)
+}

@@ -28,6 +28,7 @@ func New(db *gorm.DB) *Repository {
 
 func (u *UserDTO) ToUser() *model.User {
 	return &model.User{
+		Name:           u.Name,
 		UserID:         u.UserID,
 		Username:       u.Username,
 		Password:       u.Password,
@@ -41,6 +42,7 @@ func (u *UserDTO) ToUser() *model.User {
 func ToUserDTO(user model.User) *UserDTO {
 	return &UserDTO{
 		User: model.User{
+			Name:           user.Name,
 			UserID:         user.UserID,
 			Username:       user.Username,
 			Password:       user.Password,

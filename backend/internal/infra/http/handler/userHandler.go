@@ -13,6 +13,7 @@ import (
 	"backend/internal/domain/s3"
 	"backend/internal/infra/config"
 	"backend/internal/infra/http/helper"
+	"slices"
 )
 
 type User struct {
@@ -27,12 +28,19 @@ func NewUser(repo userRepo.Repository, contactRepo contactRepo.Repository) *User
 	}
 }
 
+var NewRegister []string
+
 func (u *User) RegisterUser(c echo.Context) error {
 	password := c.FormValue("password")
+
+	if password == "" || c.FormValue("username") == "" || c.FormValue("phone") == "" || c.FormValue("name") == "" {
+		return c.String(http.StatusBadRequest, "fields can not be empty")
+	}
 
 	passHash := helper.HashData(password)
 
 	req := model.User{
+		Name:     c.FormValue("name"),
 		Username: c.FormValue("username"),
 		Password: passHash,
 		Phone:    c.FormValue("phone"),
@@ -42,6 +50,10 @@ func (u *User) RegisterUser(c echo.Context) error {
 	if err := u.repo.Create(c.Request().Context(), req); err != nil {
 		return c.String(http.StatusInternalServerError, "Cant create user")
 	}
+
+	NewRegister = make([]string, 0)
+
+	NewRegister = append(NewRegister, req.Username)
 
 	return c.String(http.StatusCreated, "User created")
 }
@@ -81,10 +93,13 @@ func (u *User) LoginUser(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
+	firstLogin := slices.Contains(NewRegister, username)
+
 	return c.JSON(http.StatusOK, echo.Map{
-		"token":    token,
-		"username": users[0].Username,
-		"userID":   users[0].UserID,
+		"token":        token,
+		"username":     users[0].Username,
+		"userID":       users[0].UserID,
+		"isFirstLogin": firstLogin,
 	})
 }
 
@@ -137,6 +152,8 @@ func (u *User) UpdateUser(c echo.Context) error {
 		log.Warnln("no profile picture found")
 		pf = nil
 	}
+
+	helper.DeleteValueFromArray(&NewRegister, username)
 
 	if ph != "" {
 		if err = u.repo.Update(c.Request().Context(), model.User{
