@@ -17,18 +17,18 @@ cd deployment
 docker compose up
 ```
 
-or
+or if you want test
 
  - Frontend
 
 	```bash
 	cd frontend
 	npm install
-	npm run build
-	npm run preview
+	npm run dev
 	```
 - Backend
 	```bash
 	cd backend
-	<TBD>
+	go mod download
+	go run main.go
 	```
