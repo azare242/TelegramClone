@@ -9,7 +9,7 @@ type GetCommand struct {
 	ID       *uint64
 	Username *string
 	Phone    *string
-	IsActive *bool
+	IsActive *string
 }
 
 type Repository interface {

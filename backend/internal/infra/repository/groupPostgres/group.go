@@ -65,6 +65,9 @@ func (g *Repository) Get(ctx context.Context, cmd groupRepo.GetCommand) ([]model
 	if cmd.Name != nil {
 		condition.Name = *cmd.Name
 	}
+	if cmd.CreatorID != nil {
+		condition.Creator = *cmd.CreatorID
+	}
 
 	result := g.db.WithContext(ctx).Where(&condition).Find(&groupDTOs)
 	if result.Error != nil {

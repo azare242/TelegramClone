@@ -245,6 +245,7 @@ func (ch *Chat) NewUserChatHandler(g *echo.Group) {
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
 	chatGroup.POST("/:chatid/message", ch.NewChatMessage)
+	// TODO: check sender and deleter of a message is one of users from chat
 	chatGroup.DELETE("/:chatid/message/:messageid", ch.DeleteChatMessage)
 	chatGroup.GET("/:chatid/message/:count", ch.GetMessageByCount)
 }

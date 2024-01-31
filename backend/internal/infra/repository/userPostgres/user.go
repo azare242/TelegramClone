@@ -36,6 +36,7 @@ func (u *UserDTO) ToUser() *model.User {
 		IsActive:       u.IsActive,
 		Biography:      u.Biography,
 		ProfilePicture: u.ProfilePicture,
+		IsFirtsLogin:   u.IsFirtsLogin,
 	}
 }
 
@@ -50,6 +51,7 @@ func ToUserDTO(user model.User) *UserDTO {
 			IsActive:       user.IsActive,
 			Biography:      user.Biography,
 			ProfilePicture: user.ProfilePicture,
+			IsFirtsLogin:   user.IsFirtsLogin,
 		},
 		CreatedAt: time.Now(),
 	}
@@ -100,6 +102,8 @@ func (u *Repository) Get(ctx context.Context, cmd userRepo.GetCommand) ([]model.
 func (u *Repository) Update(ctx context.Context, user model.User) error {
 	var condition UserDTO
 	condition.Username = user.Username
+	condition.UserID = user.UserID
+	user.IsFirtsLogin = "false"
 
 	dto := UserDTO{
 		User:      user,

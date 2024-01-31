@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	echo "github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
@@ -13,7 +14,6 @@ import (
 	"backend/internal/domain/s3"
 	"backend/internal/infra/config"
 	"backend/internal/infra/http/helper"
-	"slices"
 )
 
 type User struct {
@@ -28,8 +28,6 @@ func NewUser(repo userRepo.Repository, contactRepo contactRepo.Repository) *User
 	}
 }
 
-var NewRegister []string
-
 func (u *User) RegisterUser(c echo.Context) error {
 	password := c.FormValue("password")
 
@@ -40,20 +38,17 @@ func (u *User) RegisterUser(c echo.Context) error {
 	passHash := helper.HashData(password)
 
 	req := model.User{
-		Name:     c.FormValue("name"),
-		Username: c.FormValue("username"),
-		Password: passHash,
-		Phone:    c.FormValue("phone"),
-		IsActive: true,
+		Name:         c.FormValue("name"),
+		Username:     c.FormValue("username"),
+		Password:     passHash,
+		Phone:        c.FormValue("phone"),
+		IsFirtsLogin: "true",
+		IsActive:     "true",
 	}
 
 	if err := u.repo.Create(c.Request().Context(), req); err != nil {
 		return c.String(http.StatusInternalServerError, "Cant create user")
 	}
-
-	NewRegister = make([]string, 0)
-
-	NewRegister = append(NewRegister, req.Username)
 
 	return c.String(http.StatusCreated, "User created")
 }
@@ -69,10 +64,7 @@ func (u *User) LoginUser(c echo.Context) error {
 	passHash := helper.HashData(password)
 
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
-		ID:       nil,
 		Username: &username,
-		Phone:    nil,
-		IsActive: nil,
 	})
 	if err != nil {
 		return echo.ErrInternalServerError
@@ -88,18 +80,23 @@ func (u *User) LoginUser(c echo.Context) error {
 		return echo.ErrUnauthorized
 	}
 
+	if err = u.repo.Update(c.Request().Context(), model.User{
+		Username: username,
+		IsActive: "true",
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
 	token, err := helper.JwtToken(users[0].UserID)
 	if err != nil {
 		return echo.ErrInternalServerError
 	}
 
-	firstLogin := slices.Contains(NewRegister, username)
-
 	return c.JSON(http.StatusOK, echo.Map{
 		"token":        token,
 		"username":     users[0].Username,
 		"userID":       users[0].UserID,
-		"isFirstLogin": firstLogin,
+		"isFirstLogin": users[0].IsFirtsLogin,
 	})
 }
 
@@ -152,8 +149,6 @@ func (u *User) UpdateUser(c echo.Context) error {
 		log.Warnln("no profile picture found")
 		pf = nil
 	}
-
-	helper.DeleteValueFromArray(&NewRegister, username)
 
 	if ph != "" {
 		if err = u.repo.Update(c.Request().Context(), model.User{
@@ -403,6 +398,23 @@ func (u *User) UpdateContact(c echo.Context) error {
 	return c.String(http.StatusOK, "contact status updated")
 }
 
+func (u *User) UpdateOnlineStatus(c echo.Context) error {
+	userID, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	if err := u.repo.Update(c.Request().Context(), model.User{
+		UserID:   uint64(userID),
+		LastSeen: time.Now(),
+		IsActive: "false",
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
+}
+
 func (u *User) NewUserHandler(g *echo.Group) {
 	g.POST("/register", u.RegisterUser)
 	g.POST("/login", u.LoginUser)
@@ -414,6 +426,7 @@ func (u *User) NewUserHandler(g *echo.Group) {
 	userGroup.DELETE("/:username", u.DeleteUser)
 	userGroup.GET("/pfp/:username", u.GetUserPfpf)
 	userGroup.GET("", u.GetUserByKey)
+	userGroup.POST("/signout", u.UpdateOnlineStatus)
 
 	// users contact list endpoints
 	userGroup.GET("/:username/contacts", u.GetUserContacts)
