@@ -319,7 +319,7 @@ func (g *Group) GetGroupMessages(c echo.Context) error {
 func (g *Group) NewGroupHandler(gr *echo.Group) {
 	GroupsGroup := gr.Group("/groups")
 
-	GroupsGroup.POST("/", g.NewGroup)
+	GroupsGroup.POST("", g.NewGroup)
 	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
 	GroupsGroup.POST("/:groupid", g.AddUserToGroup)
 	GroupsGroup.DELETE("/:groupid/:userid", g.DeleteUserFromGroup)

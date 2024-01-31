@@ -158,6 +158,10 @@ func (m *Repository) GetDto(ctx context.Context, cmd messageRepo.GetCommand) ([]
 	otherMessageDTO := make([]messageRepo.MessageDTO, len(messageDTOs))
 
 	for i, message := range messageDTOs {
+		m.Update(ctx, model.Message{
+			MessageID: message.MessageID,
+			IsRead:    "true",
+		})
 		otherMessageDTO[i] = messageRepo.MessageDTO{
 			Message:   message.Message,
 			CreatedAt: message.CreatedAt,
