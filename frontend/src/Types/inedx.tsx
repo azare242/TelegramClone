@@ -37,6 +37,10 @@ export interface UserInfo  extends UserInfoFormValues {
 }
 
 
+export interface LoginStatus {
+  isFirstLogin: boolean
+}
+
 // ====================
 //    Response Type
 // ====================

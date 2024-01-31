@@ -32,6 +32,8 @@ export interface LanguageConfig {
     registerError: string;
     updateUserInfoSuccess: string;
     updateUserInfoError: string;
+    logoutSuccess: string;
+    logoutError: string;
   };
   forms: {
     firstName: string;
@@ -97,6 +99,8 @@ export const LanguageProvider: React.FC<{
       registerError: "خطا در ثبت نام",
       updateUserInfoSuccess: "برزورسانی موفقیت آمیز بود",
       updateUserInfoError: "بروزرسانی با خطا مواجه شد",
+      logoutSuccess: "با موفقیت خارج شدید",
+      logoutError: "خارج شدن موفقیت آمیز نبود",
 
     },
     forms: {
@@ -156,6 +160,8 @@ export const LanguageProvider: React.FC<{
       registerError: "Error in Registration",
       updateUserInfoSuccess: "Updated",
       updateUserInfoError: "Update Went Wrong",
+      logoutSuccess: "Logged Out",
+      logoutError: "Can not log out",
     },
     forms: {
       username: "Username",

@@ -50,6 +50,12 @@ const LoginForm = () => {
       position: toast.POSITION.TOP_CENTER,
     })
 
+    if (res.data?.isFirstLogin) {
+      toast.info("Please Complete your information", {
+      position: toast.POSITION.TOP_CENTER,
+    })
+      navigate('/settings')
+    }
     setLoding(false);
   };
 

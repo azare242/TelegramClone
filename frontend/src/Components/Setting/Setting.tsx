@@ -22,7 +22,8 @@ const SettingsMenu: React.FC<{
 }> = ({ userInfo }) => {
   const [isPending, setIsPending] = React.useState<boolean>(false)
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [profileImage, setProfileImage] = React.useState<string>('');
+  const [profileImageView, setProfileImageView] = React.useState<string>('');
+  const [profileImageFile, setProfileImageFile] = React.useState<File | null>(null)
   const { language, FA, EN } = useLanguage();
   const languageConfig = React.useMemo<LanguageConfig>(() => {
     return language === 'FA' ? (FA as LanguageConfig) : (EN as LanguageConfig);
@@ -30,9 +31,10 @@ const SettingsMenu: React.FC<{
   const {updateUser} = useAPI();
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
+      setProfileImageFile(event.target.files[0])
       const fileReader = new FileReader();
       fileReader.onload = (e) => {
-        setProfileImage(e.target?.result as string);
+        setProfileImageView(e.target?.result as string);
       };
       fileReader.readAsDataURL(event.target.files[0]);
     }
@@ -52,7 +54,7 @@ const SettingsMenu: React.FC<{
       phone: userInfo ? userInfo.phone : "",
     },
   });  const handleDeleteProfileImage = () => {
-    setProfileImage(''); 
+    setProfileImageView(''); 
   };
 
 
@@ -71,7 +73,7 @@ const SettingsMenu: React.FC<{
                   async (data: UserInfoFormValues, event?: React.BaseSyntheticEvent) => {
                     setIsPending(true)
                     event?.preventDefault();
-                    const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, false);
+                    const res = updateUser === null ? {success: false, message: "unknown error", data: undefined} : await updateUser(data, profileImageFile as File, false);
                     if (res.success) toast.success(languageConfig.snackbars.updateUserInfoSuccess,  {
                       position: toast.POSITION.TOP_CENTER,
                     })
@@ -106,7 +108,7 @@ const SettingsMenu: React.FC<{
           />
           <Avatar
             alt={userInfo.username}
-            src={profileImage}
+            src={profileImageView}
             sx={{ width: '100px', height: '100px', marginBottom: 2 }}
             variant='rounded'
           />

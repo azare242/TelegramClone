@@ -8,6 +8,7 @@ interface ApiRoutes {
   //USER ROUTES
   register: ApiRoute;
   login: ApiRoute;
+  logout: ApiRoute;
   getUser: ApiRoute;
   updateUser: ApiRoute;
   deleteUser: ApiRoute;
@@ -42,6 +43,10 @@ export const API_ROUTES: ApiRoutes = {
   login: {
     method: "POST",
     path: "/login",
+  },
+  logout: {
+    method: "POST",
+    path: "/users/signout"
   },
   getUser: {
     method: "GET",

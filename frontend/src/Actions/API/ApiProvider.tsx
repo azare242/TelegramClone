@@ -1,7 +1,7 @@
 import React from "react";
 import axios, { AxiosError } from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
-import { LoginFormValues, RegisterFormValues, Response, UserInfo, UserInfoFormValues } from "../../Types/inedx";
+import { LoginFormValues, LoginStatus, RegisterFormValues, Response, UserInfo, UserInfoFormValues } from "../../Types/inedx";
 import { objectToForm } from "../../Util/Converter";
 export const ApiProvider: React.FC<{
   children: React.ReactNode;
@@ -19,7 +19,7 @@ export const ApiProvider: React.FC<{
     else localStorage.removeItem("mytel-jwt")
   }, [jsonWebToken]);
 
-  const login = React.useCallback(async (form: LoginFormValues, mock: boolean = false): Promise<Response<undefined>> => {
+  const login = React.useCallback(async (form: LoginFormValues, mock: boolean = false): Promise<Response<LoginStatus>> => {
 
     const formValuesData = objectToForm<LoginFormValues>(form)
     try {
@@ -35,7 +35,7 @@ export const ApiProvider: React.FC<{
         localStorage.setItem("mytel-userid", res.data.userID)
         localStorage.setItem("mytel-username", res.data.username)
 
-        return {success: true, message: "login successfully", data: undefined}
+        return {success: true, message: "login successfully", data: {isFirstLogin: res.data.isFirstLogin}}
       } else if (res.status === 401) {
         return {success: false, message: "wrong password", data: undefined}
       } else if (res.status === 404) {
@@ -49,12 +49,26 @@ export const ApiProvider: React.FC<{
     return {success: false, message: "unknown error", data: undefined}
   }, [])
 
-  const logout = () => {
-    setJsonWebToken(null);
-    localStorage.removeItem("mytel-userid")
-    localStorage.removeItem("mytel-username")
+  const logout = React.useCallback(async (): Promise<Response<undefined>>=> {
+    try {
+      await axios.request({
+        url: `${BASE_URL_HTTP}${API_ROUTES.logout.path}`,
+        method:API_ROUTES.logout.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        }
+      })
 
-  }
+      setJsonWebToken(null);
+      localStorage.removeItem("mytel-userid")
+      localStorage.removeItem("mytel-username")
+      return {success: true, message: "Logged Out", data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+  }, [jsonWebToken])
 
   const signup = React.useCallback( async (form: RegisterFormValues, mock: boolean = false): Promise<Response<undefined>> => {
     const formValuesData = objectToForm<RegisterFormValues>(form)
@@ -113,8 +127,10 @@ export const ApiProvider: React.FC<{
   }, [jsonWebToken])
 
 
-  const updateUser = React.useCallback(async (form: UserInfoFormValues ,mock: boolean = false) => {
+  const updateUser = React.useCallback(async (form: UserInfoFormValues,image: File | null ,mock: boolean = false) => {
     const formValuesData = objectToForm<UserInfoFormValues>(form)
+    if (image) formValuesData.append("profile", image)
+    console.log(image)
     const username = localStorage.getItem("mytel-username")
     if (!username) return {success: false, message: "unknown error", data: undefined}
     try {
@@ -194,11 +210,11 @@ export const ApiProvider: React.FC<{
 
 interface APIContextInterface {
   jsonWebToken: string | null;
-  login:( (form: LoginFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
-  logout: (() => void) | null
+  login:( (form: LoginFormValues, mock?: boolean) => Promise<Response<LoginStatus>>) | null
+  logout: (() => Promise<Response<undefined>>) | null
   signup: ((form: RegisterFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
   settingsPageInfo:  ((mock?: boolean) => Promise<Response<UserInfo>>) | null
-  updateUser: ((form: UserInfoFormValues, mock?: boolean) => Promise<Response<undefined>>) | null
+  updateUser: ((form: UserInfoFormValues,image: File, mock?: boolean) => Promise<Response<undefined>>) | null
   getChats: ((mock?: boolean) => Promise<Response<unknown>>) | null
   getGroups: ((mock?: boolean) => Promise<Response<unknown>>) | null
 }
