@@ -6,13 +6,13 @@ import (
 )
 
 type GetCommand struct {
-	ID *uint64
-	Name   *string
+	ID   *uint64
+	Name *string
 }
 
 type Repository interface {
 	Get(ctx context.Context, cmd GetCommand) ([]model.Group, error)
 	Create(ctx context.Context, group model.Group) error
-	Delete(ctx context.Context, group model.Group) error
-	Update(ctx context.Context, cmd GetCommand) error
+	Update(ctx context.Context, group model.Group) error
+	Delete(ctx context.Context, cmd GetCommand) error
 }

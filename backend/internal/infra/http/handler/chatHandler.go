@@ -2,22 +2,26 @@ package handler
 
 import (
 	"net/http"
+	"sort"
 	"strconv"
 
 	echo "github.com/labstack/echo/v4"
 
 	"backend/internal/domain/model"
+	"backend/internal/domain/repository/messageRepo"
 	"backend/internal/domain/repository/userChatRepo"
 	"backend/internal/infra/http/helper"
 )
 
 type Chat struct {
-	repo userChatRepo.Repository
+	repo        userChatRepo.Repository
+	messageRepo messageRepo.Repository
 }
 
-func NewGroupChat(repo userChatRepo.Repository) *Chat {
+func NewUserChat(repo userChatRepo.Repository, messageRepo messageRepo.Repository) *Chat {
 	return &Chat{
-		repo,
+		messageRepo: messageRepo,
+		repo:        repo,
 	}
 }
 
@@ -123,14 +127,124 @@ func (ch *Chat) DeleteChat(c echo.Context) error {
 }
 
 func (ch *Chat) DeleteChatMessage(c echo.Context) error {
-	return nil
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	messageID, err := strconv.ParseUint(c.Param("messageid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return c.String(http.StatusNotFound, "this chat does not exist")
+	}
+
+	if err := ch.messageRepo.Delete(c.Request().Context(), messageRepo.GetCommand{
+		ID: &messageID,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
-func (ch *Chat) NewGroupChatHandler(g *echo.Group) {
+func (ch *Chat) NewChatMessage(c echo.Context) error {
+	senderId, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return c.String(http.StatusNotFound, "this chat does not exist")
+	}
+
+	messageContent := c.FormValue("content")
+	if messageContent == "" {
+		return c.String(http.StatusBadRequest, "message content can not be empty")
+	}
+
+	if err := ch.messageRepo.Create(c.Request().Context(), model.Message{
+		ChatID:   chatID,
+		SenderID: uint64(senderId),
+		Type:     model.TypePV,
+		IsRead:   false,
+		Content:  messageContent,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusCreated)
+}
+
+func (ch *Chat) GetMessageByCount(c echo.Context) error {
+	_, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	count, err := strconv.ParseUint(c.Param("count"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	messages, err := ch.messageRepo.GetDto(c.Request().Context(), messageRepo.GetCommand{
+		ChatID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	sort.Slice(messages, func(i, j int) bool {
+		return messages[i].CreatedAt.After(messages[j].CreatedAt)
+	})
+
+	if count > uint64(len(messages)) {
+		count = uint64(len(messages))
+	}
+
+	return c.JSON(http.StatusOK, messages[:count])
+
+}
+
+func (ch *Chat) NewUserChatHandler(g *echo.Group) {
 	chatGroup := g.Group("/chats")
+
 	chatGroup.POST("", ch.NewChat)
 	chatGroup.GET("", ch.GetChats)
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
+	chatGroup.POST("/:chatid/message", ch.NewChatMessage)
 	chatGroup.DELETE("/:chatid/message/:messageid", ch.DeleteChatMessage)
+	chatGroup.GET("/:chatid/message/:count", ch.GetMessageByCount)
 }

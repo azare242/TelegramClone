@@ -17,4 +17,3 @@ COPY --from=build /app/myapp /myapp
 
 CMD ["/myapp"]
 
-

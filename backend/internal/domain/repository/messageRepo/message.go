@@ -3,6 +3,7 @@ package messageRepo
 import (
 	"backend/internal/domain/model"
 	"context"
+	"time"
 )
 
 type GetCommand struct {
@@ -17,4 +18,11 @@ type Repository interface {
 	Get(ctx context.Context, cmd GetCommand) ([]model.Message, error)
 	Update(ctx context.Context, message model.Message) error
 	Delete(ctx context.Context, cmd GetCommand) error
+	GetDto(ctx context.Context, cmd GetCommand) ([]MessageDTO, error)
+}
+
+type MessageDTO struct {
+	model.Message
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

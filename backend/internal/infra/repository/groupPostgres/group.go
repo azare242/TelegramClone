@@ -4,8 +4,9 @@ import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/groupRepo"
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -26,8 +27,8 @@ func New(db *gorm.DB) *Repository {
 
 func (g *GroupDTO) ToGroup() *model.Group {
 	return &model.Group{
-		GroupID:   g.GroupID,
-		Name: g.Name,
+		GroupID:     g.GroupID,
+		Name:        g.Name,
 		Description: g.Description,
 	}
 }
@@ -35,8 +36,8 @@ func (g *GroupDTO) ToGroup() *model.Group {
 func ToGroupDTO(group model.Group) *GroupDTO {
 	return &GroupDTO{
 		Group: model.Group{
-			GroupID:   group.GroupID,
-			Name: group.Name,
+			GroupID:     group.GroupID,
+			Name:        group.Name,
 			Description: group.Description,
 		},
 		CreatedAt: time.Now(),
@@ -83,7 +84,7 @@ func (g *Repository) Update(ctx context.Context, group model.Group) error {
 	condition.GroupID = group.GroupID
 
 	dto := GroupDTO{
-		Group:      group,
+		Group:     group,
 		UpdatedAt: time.Now(),
 	}
 

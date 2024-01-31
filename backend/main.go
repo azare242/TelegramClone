@@ -38,13 +38,12 @@ func main() {
 	}
 
 	repou := userPostgres.New(db)
-
-	//repom := messagePostgres.New(db)
-	//repog := groupPostgres.New(db)
+	repom := messagePostgres.New(db)
+	repog := groupPostgres.New(db)
 	repoc := contactPostgres.New(db)
-	//repoug := userGroupPostgres.New(db)
-	//repogc := groupChatPostgres.New(db)
-	//repouc := userChatPostgres.New(db)
+	repoug := userGroupPostgres.New(db)
+	repogc := groupChatPostgres.New(db)
+	repouc := userChatPostgres.New(db)
 
 	e := echo.New()
 
@@ -61,9 +60,12 @@ func main() {
 	//}
 
 	hu := handler.NewUser(repou, repoc)
-	hu.NewUserHandler(e.Group("/api"))
+	hc := handler.NewUserChat(repouc, repom)
+	hg := handler.NewGroup(repog, repom, repoug, repogc)
 
-	//hg := handler.NewGroup(repog)
+	hu.NewUserHandler(e.Group("/api"))
+	hc.NewUserChatHandler(e.Group("/api"))
+	hg.NewGroupHandler(e.Group("/api"))
 
 	if err := e.Start(conf.Server.Address + ":" + strconv.Itoa(conf.Server.Port)); err != nil {
 		log.Fatalf("server failed to start %v", err)

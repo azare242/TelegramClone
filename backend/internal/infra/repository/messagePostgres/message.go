@@ -4,8 +4,9 @@ import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/messageRepo"
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -96,7 +97,7 @@ func (m *Repository) Update(ctx context.Context, message model.Message) error {
 	condition.MessageID = message.MessageID
 
 	dto := MessageDTO{
-		Message:      message,
+		Message:   message,
 		UpdatedAt: time.Now(),
 	}
 
@@ -130,4 +131,39 @@ func (m *Repository) Delete(ctx context.Context, cmd messageRepo.GetCommand) err
 	}
 
 	return nil
+}
+
+func (m *Repository) GetDto(ctx context.Context, cmd messageRepo.GetCommand) ([]messageRepo.MessageDTO, error) {
+	var messageDTOs []MessageDTO
+	var condition MessageDTO
+
+	if cmd.ID != nil {
+		condition.MessageID = *cmd.ID
+	}
+	if cmd.ChatID != nil {
+		condition.ChatID = *cmd.ChatID
+	}
+	if cmd.SenderID != nil {
+		condition.SenderID = *cmd.SenderID
+	}
+	if cmd.Type != nil {
+		condition.Type = *cmd.Type
+	}
+
+	result := m.db.WithContext(ctx).Where(&condition).Find(&messageDTOs)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	otherMessageDTO := make([]messageRepo.MessageDTO, len(messageDTOs))
+
+	for i, message := range messageDTOs {
+		otherMessageDTO[i] = messageRepo.MessageDTO{
+			Message:   message.Message,
+			CreatedAt: message.CreatedAt,
+			UpdatedAt: message.UpdatedAt,
+		}
+	}
+
+	return otherMessageDTO, nil
 }
