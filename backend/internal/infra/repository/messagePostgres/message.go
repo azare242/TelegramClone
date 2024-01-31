@@ -50,15 +50,15 @@ func ToMessageDTO(message model.Message) *MessageDTO {
 	}
 }
 
-func (m *Repository) Create(ctx context.Context, message model.Message) error {
+func (m *Repository) Create(ctx context.Context, message model.Message) (uint64, error) {
 	messageDTO := ToMessageDTO(message)
 
 	result := m.db.WithContext(ctx).Create(messageDTO)
 	if result.Error != nil {
-		return result.Error
+		return 0, result.Error
 	}
 
-	return nil
+	return messageDTO.MessageID, nil
 }
 
 func (m *Repository) Get(ctx context.Context, cmd messageRepo.GetCommand) ([]model.Message, error) {

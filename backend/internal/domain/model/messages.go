@@ -19,5 +19,5 @@ type Message struct {
 	SenderID  uint64 `gorm:"foreignKey;not null" json:"senderID"`
 	Type      Type   `gorm:"not null" json:"type"`
 	Content   string `gorm:"type:varchar(5000);not null" json:"content"`
-	IsRead    bool   `gorm:"type:bool;default:false" json:"isRead"`
+	IsRead    string `gorm:"type:varchar(10);" json:"isRead"`
 }

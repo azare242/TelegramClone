@@ -209,11 +209,11 @@ func (ch *Chat) NewChatMessage(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "message content can not be empty")
 	}
 
-	if err := ch.messageRepo.Create(c.Request().Context(), model.Message{
+	if _, err := ch.messageRepo.Create(c.Request().Context(), model.Message{
 		ChatID:   chatID,
 		SenderID: uint64(senderId),
 		Type:     model.TypePV,
-		IsRead:   false,
+		IsRead:   "false",
 		Content:  messageContent,
 	}); err != nil {
 		return echo.ErrInternalServerError
@@ -252,8 +252,11 @@ func (ch *Chat) GetMessageByCount(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
+	chatType := model.TypePV
+
 	messages, err := ch.messageRepo.GetDto(c.Request().Context(), messageRepo.GetCommand{
 		ChatID: &chatID,
+		Type:   &chatType,
 	})
 	if err != nil {
 		return echo.ErrInternalServerError
@@ -268,7 +271,6 @@ func (ch *Chat) GetMessageByCount(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, messages[:count])
-
 }
 
 func (ch *Chat) NewUserChatHandler(g *echo.Group) {
