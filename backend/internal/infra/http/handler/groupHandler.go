@@ -88,18 +88,106 @@ func (g *Group) DeleteGroup(c echo.Context) error {
 }
 
 func (g *Group) AddUserToGroup(c echo.Context) error {
-	return nil
+	creatorID, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	uCreatorID := uint64(creatorID)
+
+	groups, err := g.repo.Get(c.Request().Context(), groupRepo.GetCommand{
+		ID:        &groupID,
+		CreatorID: &uCreatorID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(groups) == 0 {
+		return c.String(http.StatusNotFound, "group not found")
+	}
+
+	id, err := strconv.ParseUint(c.FormValue("id"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err = g.userGroupRepo.Create(c.Request().Context(), model.UserGroup{
+		GroupID: groupID,
+		UserID:  id,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusCreated)
 }
 
 func (g *Group) DeleteUserFromGroup(c echo.Context) error {
-	return nil
+	creatorID, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	uCreatorID := uint64(creatorID)
+
+	groups, err := g.repo.Get(c.Request().Context(), groupRepo.GetCommand{
+		ID:        &groupID,
+		CreatorID: &uCreatorID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(groups) == 0 {
+		return c.String(http.StatusNotFound, "group not found")
+	}
+
+	id, err := strconv.ParseUint(c.Param("userid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err = g.userGroupRepo.Delete(c.Request().Context(), userGroupRepo.GetCommand{
+		UserID:  &id,
+		GroupID: &groupID,
+	}); err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func (g *Group) NewGroupMessage(c echo.Context) error {
+	// id, err := helper.ValidateJWT(c)
+	// if err != nil {
+	// 	return echo.ErrUnauthorized
+	// }
+	//
+	// groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	// if err != nil {
+	// 	return echo.ErrBadRequest
+	// }
+	//
+	// uCreatorID := uint64(id)
 	return nil
+
 }
 
 func (g *Group) DeleteGroupMessage(c echo.Context) error {
+	return nil
+}
+
+func (g *Group) GetGroupMessages(c echo.Context) error {
 	return nil
 }
 
@@ -108,8 +196,9 @@ func (g *Group) NewGroupHandler(gr *echo.Group) {
 
 	GroupsGroup.POST("/", g.NewGroup)
 	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
-	GroupsGroup.PATCH("/:groupid", g.AddUserToGroup)
+	GroupsGroup.POST("/:groupid", g.AddUserToGroup)
 	GroupsGroup.DELETE("/:groupid/:userid", g.DeleteUserFromGroup)
 	GroupsGroup.POST("/:groupid/message/:userid", g.NewGroupMessage)
 	GroupsGroup.DELETE("/:groupid/message/:messageid", g.DeleteGroupMessage)
+	GroupsGroup.GET("/:groupid/message/:count", g.GetGroupMessages)
 }

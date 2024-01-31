@@ -107,7 +107,7 @@ func (ch *Chat) GetChats(c echo.Context) error {
 }
 
 func (ch *Chat) DeleteChat(c echo.Context) error {
-	_, err := helper.ValidateJWT(c)
+	id, err := helper.ValidateJWT(c)
 	if err != nil {
 		return echo.ErrUnauthorized
 	}
@@ -115,6 +115,20 @@ func (ch *Chat) DeleteChat(c echo.Context) error {
 	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
 	if err != nil {
 		return echo.ErrBadRequest
+	}
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return c.String(http.StatusNotFound, "this chat does not exist")
+	}
+	if chats[0].UserID != uint64(id) && chats[0].ReceiverID != uint64(id) {
+		return c.String(http.StatusNotFound, "can not access this chat")
 	}
 
 	if err = ch.repo.Delete(c.Request().Context(), userChatRepo.GetCommand{
@@ -127,7 +141,7 @@ func (ch *Chat) DeleteChat(c echo.Context) error {
 }
 
 func (ch *Chat) DeleteChatMessage(c echo.Context) error {
-	_, err := helper.ValidateJWT(c)
+	id, err := helper.ValidateJWT(c)
 	if err != nil {
 		return echo.ErrUnauthorized
 	}
@@ -151,6 +165,9 @@ func (ch *Chat) DeleteChatMessage(c echo.Context) error {
 
 	if len(chats) == 0 {
 		return c.String(http.StatusNotFound, "this chat does not exist")
+	}
+	if chats[0].UserID != uint64(id) && chats[0].ReceiverID != uint64(id) {
+		return c.String(http.StatusNotFound, "can not access this chat")
 	}
 
 	if err := ch.messageRepo.Delete(c.Request().Context(), messageRepo.GetCommand{
@@ -183,6 +200,9 @@ func (ch *Chat) NewChatMessage(c echo.Context) error {
 	if len(chats) == 0 {
 		return c.String(http.StatusNotFound, "this chat does not exist")
 	}
+	if chats[0].UserID != uint64(senderId) && chats[0].ReceiverID != uint64(senderId) {
+		return c.String(http.StatusNotFound, "can not access this chat")
+	}
 
 	messageContent := c.FormValue("content")
 	if messageContent == "" {
@@ -203,7 +223,7 @@ func (ch *Chat) NewChatMessage(c echo.Context) error {
 }
 
 func (ch *Chat) GetMessageByCount(c echo.Context) error {
-	_, err := helper.ValidateJWT(c)
+	id, err := helper.ValidateJWT(c)
 	if err != nil {
 		return echo.ErrUnauthorized
 	}
@@ -211,6 +231,20 @@ func (ch *Chat) GetMessageByCount(c echo.Context) error {
 	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
 	if err != nil {
 		return echo.ErrBadRequest
+	}
+
+	chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ID: &chatID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(chats) == 0 {
+		return c.String(http.StatusNotFound, "this chat does not exist")
+	}
+	if chats[0].UserID != uint64(id) && chats[0].ReceiverID != uint64(id) {
+		return c.String(http.StatusNotFound, "can not access this chat")
 	}
 
 	count, err := strconv.ParseUint(c.Param("count"), 10, 64)
@@ -245,7 +279,6 @@ func (ch *Chat) NewUserChatHandler(g *echo.Group) {
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
 	chatGroup.POST("/:chatid/message", ch.NewChatMessage)
-	// TODO: check sender and deleter of a message is one of users from chat
 	chatGroup.DELETE("/:chatid/message/:messageid", ch.DeleteChatMessage)
 	chatGroup.GET("/:chatid/message/:count", ch.GetMessageByCount)
 }
