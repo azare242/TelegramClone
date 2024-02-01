@@ -1,5 +1,5 @@
-import { Avatar, Card, CardContent, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Avatar, Badge, Card, CardContent, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const ChatCard: React.FC<{
   username: string;
@@ -8,52 +8,71 @@ const ChatCard: React.FC<{
   time: string;
 }> = ({ username, avatarSrc, message, time }) => {
   return (
-    <div className="">
-      <Link to="">
-        <Card
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            p: 2,
-            gap: 2,
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            borderRadius: "0",
-            backgroundColor: "white",
-            height: "5rem",
-            width: "18rem",
+    <div className='px-3'>
+      <Link to=''>
+        <Badge
+          badgeContent={4}
+          color='primary'
+          anchorOrigin={{
+            vertical: `bottom`,
+            horizontal: 'left',
           }}
         >
-          <Avatar
+          <Card
             sx={{
-              width: 48,
-              height: 48,
-              bgcolor: "gray",
-            }}
-            alt={username}
-            src={avatarSrc}
-            variant={`circular`}
-          >
-            {/* Placeholder for user avatar */}
-          </Avatar>
-          <CardContent
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "start",
-              "&:last-child": {
-                paddingBottom: "16px", // Override Material-UI CardContent padding
-              },
+              display: 'flex',
+              alignItems: 'center',
+              p: 2,
+              gap: 2,
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+              borderRadius: '0',
+              backgroundColor: 'white',
+              height: '5rem',
+              width: '18rem',
             }}
           >
-            <Typography variant="subtitle1">{username}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              {message}
+            <Badge
+              variant='dot'
+              color='error'
+              anchorOrigin={{
+                vertical: `bottom`,
+                horizontal: 'right',
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 48,
+                  height: 48,
+                  bgcolor: 'gray',
+                }}
+                alt={username}
+                src={avatarSrc}
+                variant={`circular`}
+              >
+                {/* Placeholder for user avatar */}
+              </Avatar>
+            </Badge>
+
+            <CardContent
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'start',
+                '&:last-child': {
+                  paddingBottom: '16px', // Override Material-UI CardContent padding
+                },
+              }}
+            >
+              <Typography variant='subtitle1'>{username}</Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {message}
+              </Typography>
+            </CardContent>
+            <Typography variant='caption' color='text.secondary'>
+              {`${time}`}
             </Typography>
-          </CardContent>
-          <Typography variant="caption" color="text.secondary">
-            {`${time}`}
-          </Typography>
-        </Card>
+          </Card>
+        </Badge>
       </Link>
     </div>
   );

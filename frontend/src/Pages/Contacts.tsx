@@ -1,9 +1,15 @@
 import React from "react";
 import ContactList from "../Components/Contacts/ContactList";
-import { Button, IconButton, TextField } from "@mui/material";
+import { Button, IconButton, TextField, Modal, Typography, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 const Contacts: React.FC = () => {
+
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+
   return (
     <div className="flex flex-col rounded-2xl border-blue-500 bg-white/70 backdrop-blur-sm mt-[100px]">
       <div className="flex items-center justify-between p-4">
@@ -66,8 +72,42 @@ const Contacts: React.FC = () => {
         ]}
       />
       <div className="flex items-center justify-center p-4">
-        <Button>Add Contacts</Button>
+        <Button variant="contained" onClick={handleOpenModal}>Add Contacts</Button>
       </div>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+            
+          }}
+        >
+          <Typography id='modal-modal-title' variant='h6' component='h2'>
+            add contact
+          </Typography>
+          
+          <div className='flex flex-col gap-2 items-center justify-center'>
+            <TextField label={"Username"} color={`primary`}>
+
+            </TextField>
+          <Button variant='contained' color="primary" onClick={handleCloseModal}>
+            add
+          </Button>
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };
