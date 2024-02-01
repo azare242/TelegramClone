@@ -14,7 +14,7 @@ const Test = () => {
     >
 
         <Button onClick={async () => {
-            const res = apis.deleteContact === null ? {success: false, message: "unknown error", data: undefined} : await apis.deleteContact('1');
+            const res = apis.startChat === null ? {success: false, message: "unknown error", data: undefined} : await apis.startChat('1');
 
             console.log(res)
         }}
