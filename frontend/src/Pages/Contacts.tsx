@@ -4,7 +4,9 @@ import { Button, IconButton, TextField, Modal, Typography, Box } from "@mui/mate
 import { Search } from "@mui/icons-material";
 import { useAPI } from "../Actions/API/useAPI";
 import { toast } from "react-toastify";
-
+import DOG1 from '../assets/dog1.jpeg';
+import DOG2 from '../assets/dog2.webp';
+import DOG3 from '../assets/dog3.jpg';
 const Contacts: React.FC = () => {
 
   const [openModal, setOpenModal] = React.useState(false);
@@ -34,52 +36,29 @@ const Contacts: React.FC = () => {
         contactItems={[
           {
             id: 1,
-            username: "Alireza",
-            avatarSrc: "",
+            username: "sajad",
+            avatarSrc: DOG1,
             phone: "+989123456789",
           },
           {
             id: 2,
-            username: "Alireza",
-            avatarSrc: "",
+            username: "momod",
+            avatarSrc: DOG2,
             phone: "+989123456789",
           },
           {
             id: 3,
-            username: "Alireza",
-            avatarSrc: "",
+            username: "sadegh",
+            avatarSrc: DOG3,
             phone: "+989123456789",
           },
           {
             id: 4,
-            username: "Alireza",
-            avatarSrc: "",
+            username: "ahora",
+            avatarSrc: DOG1,
             phone: "+989123456789",
           },
-          {
-            id: 5,
-            username: "Alireza",
-            avatarSrc: "",
-            phone: "+989123456789",
-          },
-          {
-            id: 6,
-            username: "Alireza",
-            avatarSrc: "",
-            phone: "+989123456789",
-          },
-          {
-            id: 7,
-            username: "Alireza",
-            avatarSrc: "",
-            phone: "+989123456789",
-          },
-          {
-            id: 8,
-            username: "Alireza",
-            avatarSrc: "",
-            phone: "+989123456789",
-          },
+
         ]}
       />
       <div className="flex items-center justify-center p-4">

@@ -8,6 +8,9 @@ import { ChatPageGroup, ChatPagePV } from '../Components/Chat/ChatPage';
 import { OtherUserMessage, OtherUserMessageInGroup, UserMessage } from '../Components/Message/Message';
 import _chats from '../mockdata/chat'
 import _gp from '../mockdata/groups'
+import DOG1 from '../assets/dog1.jpeg';
+import DOG2 from '../assets/dog2.webp';
+import DOG3 from '../assets/dog3.jpg';
 const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
   const { getChats, getGroups } = useAPI();
   const { chattype } = useParams();
@@ -72,10 +75,11 @@ const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
 
         
         </ChatPagePV></div>}
-        {openedChat && chattype === 'group' && <div className='container mx-auto p-4 h-full'><ChatPageGroup gpImage='' gpName='Group'>
-        <UserMessage text="hi"></UserMessage>
-        <OtherUserMessageInGroup text='hello' username='alireza' avatarSrc=''></OtherUserMessageInGroup>
-
+        {openedChat && chattype === 'group' && <div className='container mx-auto p-4 h-full'><ChatPageGroup gpImage={DOG1} gpName='gp hagh'>
+        <UserMessage text="haji bacheha"></UserMessage>
+        <OtherUserMessageInGroup text='chi shode?' username='alireza' avatarSrc={DOG1}></OtherUserMessageInGroup>
+        <OtherUserMessageInGroup text='chi shode alireza ?' username='momod' avatarSrc={DOG2}></OtherUserMessageInGroup>
+        <OtherUserMessageInGroup text='nemidonam' username='sajad' avatarSrc={DOG3}></OtherUserMessageInGroup>
         
         </ChatPageGroup></div>}
     </MassengerLayout>
