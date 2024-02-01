@@ -20,12 +20,35 @@ import { useForm } from 'react-hook-form';
 import { useAPI } from '../../Actions/API/useAPI';
 import { toast } from 'react-toastify';
 import LodingInButton from '../Loading/LodingInButton';
+import { useNavigate } from 'react-router-dom';
 const SettingsMenu: React.FC<{
   userInfo: UserInfo;
 }> = ({ userInfo }) => {
+  const { updateUser, deleteAccount } = useAPI();
+
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const navigate = useNavigate();
+  const handleCloseModal = async (yes: boolean) => {
+    setOpenModal(false);
+    if (!yes) return;
+    else {
+      const res =
+        deleteAccount === null
+          ? { success: false, message: 'unknown error', data: undefined }
+          : await deleteAccount();
+
+      if (res.success) {
+        toast.success('Deleted', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        navigate('/');
+      } else
+        toast.error('Error', {
+          position: toast.POSITION.TOP_CENTER,
+        });
+    }
+  };
   const [isPending, setIsPending] = React.useState<boolean>(false);
   const [editing, setEditing] = React.useState<boolean>(false);
   const [profileImageView, setProfileImageView] = React.useState<string>('');
@@ -36,7 +59,6 @@ const SettingsMenu: React.FC<{
   const languageConfig = React.useMemo<LanguageConfig>(() => {
     return language === 'FA' ? (FA as LanguageConfig) : (EN as LanguageConfig);
   }, [EN, FA, language]);
-  const { updateUser } = useAPI();
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setProfileImageFile(event.target.files[0]);
@@ -57,7 +79,7 @@ const SettingsMenu: React.FC<{
     defaultValues: {
       username: userInfo ? userInfo.username : '',
       biography: userInfo ? userInfo.biography : '',
-      name: userInfo ? userInfo.name: '',
+      name: userInfo ? userInfo.name : '',
       phone: userInfo ? userInfo.phone : '',
     },
   });
@@ -82,7 +104,7 @@ const SettingsMenu: React.FC<{
                       event?: React.BaseSyntheticEvent
                     ) => {
                       setIsPending(true);
-                      console.log(data)
+                      console.log(data);
                       event?.preventDefault();
                       const res =
                         updateUser === null
@@ -240,7 +262,9 @@ const SettingsMenu: React.FC<{
       </Button>
       <Modal
         open={openModal}
-        onClose={handleCloseModal}
+        onClose={() => {
+          handleCloseModal(false);
+        }}
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
@@ -264,12 +288,24 @@ const SettingsMenu: React.FC<{
             {languageConfig.sure}
           </Typography>
           <div className='flex flex-row gap-2 items-end justify-end'>
-          <Button variant='outlined' color="success" onClick={handleCloseModal}>
-            {languageConfig.no}
-          </Button>
-          <Button variant='outlined' color="error" onClick={handleCloseModal}>
-            {languageConfig.yes}
-          </Button>
+            <Button
+              variant='outlined'
+              color='success'
+              onClick={() => {
+                handleCloseModal(false);
+              }}
+            >
+              {languageConfig.no}
+            </Button>
+            <Button
+              variant='outlined'
+              color='error'
+              onClick={() => {
+                handleCloseModal(true);
+              }}
+            >
+              {languageConfig.yes}
+            </Button>
           </div>
         </Box>
       </Modal>
