@@ -15,7 +15,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	log "github.com/sirupsen/logrus"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
@@ -25,11 +25,18 @@ func main() {
 		log.Warnln("cant find config file")
 	}
 
-	db, err := gorm.Open(sqlite.Open("messenger.db"), new(gorm.Config))
+	port := strconv.Itoa(conf.Database.Port)
+	dsn := "host=" + conf.Database.Addr + " user=" + conf.Database.User + " password=" + conf.Database.Password + " dbname=" + conf.Database.DBName + " port=" + port
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Warnln("cant open db")
-		return
+		log.Fatalf("failed to connect database %v", err)
 	}
+
+	// db, err := gorm.Open(sqlite.Open("messenger.db"), new(gorm.Config))
+	// if err != nil {
+	// 	log.Warnln("cant open db")
+	// 	return
+	// }
 
 	err = db.AutoMigrate(new(userPostgres.UserDTO), new(userChatPostgres.UserChatDTO), new(messagePostgres.MessageDTO), new(groupPostgres.GroupDTO),
 		new(contactPostgres.ContactDTO), new(userGroupPostgres.UserGroupDTO), new(groupChatPostgres.GroupChatDTO))
@@ -51,13 +58,6 @@ func main() {
 	//e.Use(echoMiddleware.Recover())
 
 	e.GET("healthz", handler.Healthz)
-
-	//port := strconv.Itoa(conf.Database.Port)
-	//dsn := "host=" + conf.Database.Addr + " user=" + conf.Database.User + " password=" + conf.Database.Password + " dbname=" + conf.Database.DBName + " port=" + port
-	//db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	//if err != nil {
-	//	log.Fatalf("failed to connect database %v", err)
-	//}
 
 	hu := handler.NewUser(repou, repoc)
 	hc := handler.NewUserChat(repouc, repom)

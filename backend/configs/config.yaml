@@ -6,9 +6,9 @@ server:
 database:
   port: 5432
   address: localhost
-  user: admin
-  password: password
-  dbname: messenger
+  user: postgres 
+  password: postgres
+  dbname: development_database
 
 s3:
   accessKey: ee82ad29-9bec-40f7-a64c-d854390c51a2
