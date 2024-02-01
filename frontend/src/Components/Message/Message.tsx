@@ -1,6 +1,6 @@
 // UserMessage.js
 import React from 'react';
-import { Paper, Avatar } from '@mui/material';
+import { Paper, Avatar, Typography } from '@mui/material';
 
 const UserMessage: React.FC<{text: string}> = ({ text }) => {
   return (
@@ -23,11 +23,14 @@ const OtherUserMessage: React.FC<{text: string}> = ({ text }) => {
   );
 };
 
-const OtherUserMessageInGroup:  React.FC<{text: string, avatarSrc: string}> = ({ text, avatarSrc }) => {
+const OtherUserMessageInGroup:  React.FC<{text: string, avatarSrc: string, username: string}> = ({ text, avatarSrc, username }) => {
     return (
       <div className="flex items-end mb-4">
         <Avatar alt="Other User" src={avatarSrc} className="mr-2" />
         <Paper elevation={3} className="px-4 py-2 bg-gray-300 max-w-xs rounded-lg" sx={{backgroundColor: "green",   color: "white"}}>
+        <Typography id='paper-paper-title' variant='h6' component='h2'>
+            {username}
+          </Typography>
           {text}
         </Paper>
       </div>
