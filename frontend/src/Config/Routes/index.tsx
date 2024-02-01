@@ -4,6 +4,8 @@ import Home from "../../Pages/Home";
 import Massenger from "../../Pages/Massenger";
 import Settings from "../../Pages/Settings";
 import Contacts from "../../Pages/Contacts";
+import UserInfo from "../../Components/Info/UserInfo";
+import GroupInfo from "../../Components/Info/GroupInfo";
 
 export type AppRouteType = {
   path: string;
@@ -50,5 +52,16 @@ export const publicRoutes: AppRouteType[] = [
     path: "contacts",
     name: "Contacts",
     element: <Contacts/>
+  }
+  ,
+  {
+    path: "user/:id",
+    name: "userinfo",
+    element: <UserInfo/>
+  },
+  {
+    path: "group/:id",
+    name: "groupinfo",
+    element: <GroupInfo/>
   }
 ];

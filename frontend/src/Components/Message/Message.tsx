@@ -29,9 +29,9 @@ const OtherUserMessageInGroup:  React.FC<{text: string, avatarSrc: string, usern
         <Avatar alt="Other User" src={avatarSrc} className="mr-2" />
         <Paper elevation={3} className="px-4 py-2 bg-gray-300 max-w-xs rounded-lg" sx={{backgroundColor: "green",   color: "white"}}>
         <Typography id='paper-paper-title' component='p'>
-            {`> ${username}`}
+            {`${username}`}
           </Typography>
-          <h1>{`>>> ${text}`}</h1>
+          <h1 className='text-end'>{`${text}`}</h1>
         </Paper>
       </div>
     );
