@@ -303,6 +303,33 @@ export const ApiProvider: React.FC<{
     return {success: false, message: "unknown error", data: undefined}
 
   }, [jsonWebToken])
+
+  const deleteContact = React.useCallback(async (id: string): Promise<Response<undefined>> => {
+
+    const username = localStorage.getItem("mytel-username")
+    if (!username) return {success: false, message: "unknown error", data: undefined}
+    try {
+      const res = await axios.request({
+        url:`${BASE_URL_HTTP}${API_ROUTES.deleteContact.path.replace("$1", username).replace("$2", id)}`,
+        method: API_ROUTES.deleteContact.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        },
+
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "delete successfully", data: undefined}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+
+
+  }, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -315,7 +342,8 @@ export const ApiProvider: React.FC<{
     deleteAccount,
     getUserProfile,
     addContact,
-    getContacts
+    getContacts,
+    deleteContact
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -334,6 +362,7 @@ interface APIContextInterface {
   getUserProfile: ((id: string) => Promise<Response<userProfile>>) | null 
   addContact: ((user_name: string) => Promise<Response<undefined>>) | null
   getContacts: (()=> Promise<Response<unknown>>) | null
+  deleteContact: ((id: string) => Promise<Response<undefined>>) | null
 
 }
 export const APIContext = React.createContext<APIContextInterface>({
@@ -348,5 +377,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   deleteAccount: null,
   getUserProfile: null,
   addContact: null,
-  getContacts: null
+  getContacts: null,
+  deleteContact: null
 });
