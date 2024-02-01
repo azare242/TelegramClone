@@ -2,13 +2,24 @@ import React from "react";
 import ContactList from "../Components/Contacts/ContactList";
 import { Button, IconButton, TextField, Modal, Typography, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { useAPI } from "../Actions/API/useAPI";
+import { toast } from "react-toastify";
 
 const Contacts: React.FC = () => {
 
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+  const [username, setUsername] = React.useState<string>('');
 
+  const {addContact} = useAPI()
+  const addContactHandle = async () => {
+    const res = addContact === null ? {success: false, message: "unknown error", data:undefined} : await addContact(username);
+
+    if (res.success) toast.success("Contact Added Successfully")
+    setOpenModal(false)
+
+  }
 
   return (
     <div className="flex flex-col rounded-2xl border-blue-500 bg-white/70 backdrop-blur-sm mt-[100px]">
@@ -99,10 +110,10 @@ const Contacts: React.FC = () => {
           </Typography>
           
           <div className='flex flex-col gap-2 items-center justify-center'>
-            <TextField label={"Username"} color={`primary`}>
+            <TextField label={"Username"} color={`primary`} onChange={(e) => setUsername(e.target.value)} value={username}>
 
             </TextField>
-          <Button variant='contained' color="primary" onClick={handleCloseModal}>
+          <Button variant='contained' color="primary" onClick={addContactHandle}>
             add
           </Button>
           </div>
