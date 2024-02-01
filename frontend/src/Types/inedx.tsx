@@ -40,6 +40,18 @@ export interface LoginStatus {
   isFirstLogin: boolean
 }
 
+
+
+export interface userProfile {
+  name: string;
+  userID: number,
+  username: string;
+  phone: string;
+  biography: string;
+  profilePicture: string;
+  lastSeen: string;
+} 
+
 // ====================
 //    Response Type
 // ====================

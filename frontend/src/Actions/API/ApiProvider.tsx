@@ -1,7 +1,7 @@
 import React from "react";
 import axios, { AxiosError } from 'axios';
 import { API_ROUTES, BASE_URL_HTTP } from "./Routes";
-import { LoginFormValues, LoginStatus, RegisterFormValues, Response, UserInfo, UserInfoFormValues } from "../../Types/inedx";
+import { LoginFormValues, LoginStatus, RegisterFormValues, Response, UserInfo, UserInfoFormValues, userProfile } from "../../Types/inedx";
 import { objectToForm } from "../../Util/Converter";
 export const ApiProvider: React.FC<{
   children: React.ReactNode;
@@ -229,6 +229,33 @@ export const ApiProvider: React.FC<{
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [jsonWebToken])
+
+  const getUserProfile = React.useCallback(async (id: string): Promise<Response<userProfile>> => {
+    
+
+    try {
+      const res = await axios.request({
+        url: `${BASE_URL_HTTP}${API_ROUTES.getUser.path.replace("$1", id)}`,
+        method: API_ROUTES.getUser.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        }
+      })
+
+      if (res.status === 200) {
+        console.log(res.data)
+        return {success: true, message: "fetch successfully", data: res.data as userProfile}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
+
+
+
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -239,6 +266,7 @@ export const ApiProvider: React.FC<{
     getChats,
     getGroups,
     deleteAccount,
+    getUserProfile,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -254,6 +282,8 @@ interface APIContextInterface {
   getChats: ((mock?: boolean) => Promise<Response<unknown>>) | null
   getGroups: ((mock?: boolean) => Promise<Response<unknown>>) | null
   deleteAccount: (() => Promise<Response<undefined>>) | null 
+  getUserProfile: ((id: string) => Promise<Response<userProfile>>) | null 
+
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -264,5 +294,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   updateUser: null,
   getChats: null,
   getGroups: null,
-  deleteAccount: null
+  deleteAccount: null,
+  getUserProfile: null
 });
