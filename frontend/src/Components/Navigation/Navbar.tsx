@@ -171,12 +171,13 @@ const Navbar = () => {
                       toast.success(languageConfig.snackbars.logoutSuccess,  {
                         position: toast.POSITION.TOP_CENTER,
                       })
-                      navigate('/');
+                      
                     } else {
                       toast.error(languageConfig.snackbars.logoutError,  {
                         position: toast.POSITION.TOP_CENTER,
                       })
                     }
+                    navigate('/');
                   }}
                 >
                   {languageConfig.logout}

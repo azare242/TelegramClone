@@ -56,6 +56,10 @@ export interface LanguageConfig {
   fourOFour: string;
   settings: string;
   logout: string;
+  deleteAccount: string;
+  sure: string;
+  yes: string;
+  no: string;
 }
 export const LanguageProvider: React.FC<{
   children: React.ReactNode;
@@ -124,6 +128,10 @@ export const LanguageProvider: React.FC<{
     submit: "ثبت",
     notFound: "پیدا نشد",
     fourOFour: "۴۰۴",
+    deleteAccount: "حذف حساب کاربری",
+    sure: "آیا مطمعن هستید؟",
+    yes: "بله",
+    no: "خیر",
   };
 
   const EN: LanguageConfig = {
@@ -184,6 +192,10 @@ export const LanguageProvider: React.FC<{
     submit: "Submit",
     notFound: "Not Found",
     fourOFour: "404",
+    sure: "Are You Sure",
+    yes: "Yes",
+    no: "No",
+    deleteAccount: "Delete Account",
   };
   const context = {
     language,
