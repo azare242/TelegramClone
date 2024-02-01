@@ -28,10 +28,10 @@ const OtherUserMessageInGroup:  React.FC<{text: string, avatarSrc: string, usern
       <div className="flex items-end mb-4">
         <Avatar alt="Other User" src={avatarSrc} className="mr-2" />
         <Paper elevation={3} className="px-4 py-2 bg-gray-300 max-w-xs rounded-lg" sx={{backgroundColor: "green",   color: "white"}}>
-        <Typography id='paper-paper-title' variant='h6' component='h2'>
-            {username}
+        <Typography id='paper-paper-title' component='p'>
+            {`> ${username}`}
           </Typography>
-          {text}
+          <h1>{`>>> ${text}`}</h1>
         </Paper>
       </div>
     );

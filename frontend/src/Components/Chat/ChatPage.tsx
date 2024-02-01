@@ -69,6 +69,7 @@ const ChatPageGroup: React.FC<{gpImage: string, gpName: string, children: React.
 
       <div className="input-area p-4 border-t-2">
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+        <Button variant="contained" sx={{ ml: 1 }}>FILE</Button>
 
           <ChatBubbleOutline sx={{ mr: 1, my: 0.5 }} />
           <TextField id="input-message" label="Type a message" variant="standard" fullWidth />
