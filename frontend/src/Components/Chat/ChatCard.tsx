@@ -6,12 +6,13 @@ const ChatCard: React.FC<{
   avatarSrc: string;
   message: string;
   time: string;
-}> = ({ username, avatarSrc, message, time }) => {
+  link: string
+}> = ({ username, avatarSrc, message, time, link }) => {
   return (
     <div className='px-3'>
-      <Link to=''>
+      <Link to={`/ppllss/${link}/10`}>
         <Badge
-          badgeContent={4}
+          badgeContent={1}
           color='primary'
           anchorOrigin={{
             vertical: `bottom`,

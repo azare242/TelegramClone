@@ -8,8 +8,9 @@ const ChatCardList: React.FC<{
     image: string;
     lastMessage: string;
     time: string
-  }[];
-}> = ({ chatItems }) => {
+  }[],
+  link: string
+}> = ({ chatItems, link }) => {
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between p-4">
@@ -26,6 +27,7 @@ const ChatCardList: React.FC<{
             avatarSrc={chatItem.image}
             message={chatItem.lastMessage}
             time={chatItem.time}
+            link={link}
           />
         ))}
       </div>

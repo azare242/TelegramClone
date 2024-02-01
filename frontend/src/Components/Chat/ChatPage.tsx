@@ -19,7 +19,7 @@ const ChatPagePV: React.FC<{userImage: string, userName: string, children: React
         <Avatar alt="User Image" src={userImage} />
         <div className="ml-4">
           <p className="font-semibold">{userName}</p>
-          <p className="text-gray-500">Online</p>
+          <p className="text-gray-500">Last Seen Yesterday 11:00 AM</p>
         </div>
       </div>
 
