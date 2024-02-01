@@ -50,22 +50,27 @@ export const ApiProvider: React.FC<{
   }, [])
 
   const logout = React.useCallback(async (): Promise<Response<undefined>>=> {
+    const _tmp = `${jsonWebToken}`
+    setJsonWebToken(null);
+    localStorage.removeItem("mytel-userid")
+    localStorage.removeItem("mytel-username")
     try {
       await axios.request({
         url: `${BASE_URL_HTTP}${API_ROUTES.logout.path}`,
         method:API_ROUTES.logout.method,
         headers: {
-          "Authorization": `${jsonWebToken}`
+          "Authorization": `${_tmp}`
         }
       })
 
-      setJsonWebToken(null);
-      localStorage.removeItem("mytel-userid")
-      localStorage.removeItem("mytel-username")
+
       return {success: true, message: "Logged Out", data: undefined}
     } catch (e) {
-      if (e instanceof AxiosError)
+      if (e instanceof AxiosError){
+        if (e.response?.status === 401) return {success: true, message: "Logged Out", data: undefined} 
         return {success: false, message: e.response?.data.message, data: undefined}
+      
+      }
       else return {success: false, message: "unknown error", data: undefined}
     }
   }, [jsonWebToken])

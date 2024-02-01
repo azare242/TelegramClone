@@ -7,6 +7,7 @@ import LoadingInPage from "../Components/Loading/LoadingInPage";
 import { toast } from "react-toastify";
 const Settings = () => {
 
+
   const [loaded, setLoaded] = React.useState<boolean>(false)
   const [userInfo, setUserInfo] = React.useState<UserInfo | null>(null)
   const { settingsPageInfo } = useAPI();
@@ -18,7 +19,9 @@ const Settings = () => {
         setUserInfo(res.data as UserInfo)
         setLoaded(true)
       } else {
-        toast.error("something went wrong")
+        toast.error("something went wrong", {
+          position: toast.POSITION.TOP_CENTER,
+        })
       }
       
     }
