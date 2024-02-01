@@ -346,6 +346,81 @@ func (ch *Chat) NewChatMessage(c echo.Context) error {
 	return c.NoContent(http.StatusCreated)
 }
 
+func (ch *Chat) NewChatMessageWs(c echo.Context) error {
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	senderId, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	chatID, err := strconv.ParseUint(c.Param("chatid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	for {
+		var incomingMessage struct {
+			Content string `json:"content"`
+			Stat    string `json:"stat"`
+		}
+
+		err = ws.ReadJSON(&incomingMessage)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return err
+			}
+			break
+		}
+
+		if incomingMessage.Stat == "exit" {
+			break
+		}
+
+		chatID := chatID
+		messageContent := incomingMessage.Content
+
+		chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+			ID: &chatID,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		if len(chats) == 0 {
+			ws.WriteMessage(websocket.TextMessage, []byte("This chat does not exist"))
+			continue
+		}
+		if chats[0].UserID != uint64(senderId) && chats[0].ReceiverID != uint64(senderId) {
+			ws.WriteMessage(websocket.TextMessage, []byte("Cannot access this chat"))
+			continue
+		}
+
+		if messageContent == "" {
+			ws.WriteMessage(websocket.TextMessage, []byte("Message content cannot be empty"))
+			continue
+		}
+
+		if _, err := ch.messageRepo.Create(c.Request().Context(), model.Message{
+			ChatID:   chatID,
+			SenderID: uint64(senderId),
+			Type:     model.TypePV,
+			IsRead:   "false",
+			Content:  messageContent,
+		}); err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		ws.WriteMessage(websocket.TextMessage, []byte("Message sent"))
+	}
+
+	return nil
+}
+
 func (ch *Chat) GetMessageByCount(c echo.Context) error {
 	id, err := helper.ValidateJWT(c)
 	if err != nil {
@@ -406,6 +481,7 @@ func (ch *Chat) NewUserChatHandler(g *echo.Group) {
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
 	chatGroup.POST("/:chatid/message", ch.NewChatMessage)
+	chatGroup.GET("/:chatid/message/ws", ch.NewChatMessageWs)
 	chatGroup.DELETE("/:chatid/message/:messageid", ch.DeleteChatMessage)
 	chatGroup.GET("/:chatid/message/:count", ch.GetMessageByCount)
 }
