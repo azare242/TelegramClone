@@ -144,10 +144,20 @@ func (u *User) UpdateUser(c echo.Context) error {
 	ph := c.FormValue("phone")
 	ps := c.FormValue("password")
 	bi := c.FormValue("biography")
+	nm := c.FormValue("name")
 	pf, err := c.FormFile("profile")
 	if err != nil {
 		log.Warnln("no profile picture found")
 		pf = nil
+	}
+
+	if nm != "" {
+		if err = u.repo.Update(c.Request().Context(), model.User{
+			Username: username,
+			Name:     nm,
+		}); err != nil {
+			return echo.ErrInternalServerError
+		}
 	}
 
 	if ph != "" {
