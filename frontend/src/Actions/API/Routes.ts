@@ -32,6 +32,9 @@ interface ApiRoutes {
   deleteGroup: ApiRoute;
   addMember: ApiRoute;
   kickMember: ApiRoute;
+  getGroup: ApiRoute;
+  getGroups: ApiRoute
+
 }
 export const BASE_URL_HTTP = "http://127.0.0.1:3000/api"
 export const BASE_URL_WS = "ws://66.248.207.109/api"
@@ -115,11 +118,19 @@ export const API_ROUTES: ApiRoutes = {
     path: "/groups/$1",
   },
   addMember: {
-    method: "PATCH",
+    method: "POST",
     path: "/groups/$1",
   },
   kickMember: {
     method: "DELETE",
     path: "/groups/$1/$2",
   },
+  getGroup: {
+    method: "GET",
+    path: "/groups/$1"
+  },
+  getGroups: {
+     method : "GET",
+     path: "/groups/allgroups"
+  }
 };

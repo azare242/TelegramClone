@@ -162,15 +162,15 @@ export const ApiProvider: React.FC<{
   const getChats = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/chats" : `${BASE_URL_HTTP}${""}`,
-        method: mock ? "GET" : "GET",
+        url: mock ? "http://127.0.0.1:3000/mock/chats" : `${BASE_URL_HTTP}${API_ROUTES.getChats.path}`,
+        method: mock ? "GET" : API_ROUTES.getChat.method,
         headers: {
           "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         },
       })
 
       if (res.status === 200) {
-        return {success: true, message: "fetch successfully", data: res.data.data}
+        return {success: true, message: "fetch successfully", data: mock ? res.data.data : res.data}
       }
     } catch (e) {
       if (e instanceof AxiosError)
@@ -182,15 +182,15 @@ export const ApiProvider: React.FC<{
   const getGroups = React.useCallback(async (mock: boolean = false) : Promise<Response<unknown>> => {
     try {
       const res = await axios.request({
-        url: mock ? "http://127.0.0.1:3000/mock/groups" : `${BASE_URL_HTTP}${""}`,
-        method: mock ? "GET" : "GET",
+        url: mock ? "http://127.0.0.1:3000/mock/groups" : `${BASE_URL_HTTP}${API_ROUTES.getGroups.path}`,
+        method: mock ? "GET" : API_ROUTES.getGroups.method,
         headers: {
           "Authorization": `${mock ? "Bearer " : ""}${jsonWebToken}`
         },
       })
 
       if (res.status === 200) {
-        return {success: true, message: "fetch successfully", data: res.data.data}
+        return {success: true, message: "fetch successfully", data: mock ? res.data.data : res.data}
       }
     } catch (e) {
       if (e instanceof AxiosError)
@@ -400,6 +400,36 @@ export const ApiProvider: React.FC<{
 
 
   }, [jsonWebToken])
+
+
+  const startGroup = React.useCallback(async (name: string, description: string): Promise<Response<undefined>> => {
+    try {
+      const res = await axios.request({
+        url:`${BASE_URL_HTTP}${API_ROUTES.createGroup.path}`,
+        method: API_ROUTES.createGroup.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        },
+        data: objectToForm({name: name, description: description})
+      })
+
+      if (res.status === 201) {
+        return {success: true, message: "start group successfully", data: undefined}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+
+  }, [jsonWebToken])
+
+
+  const getGroupInfo = React.useCallback((id: string): Promise<Response<unknown>> => {}, [jsonWebToken])
+  const deleteGroup = React.useCallback((id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
+  const addmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
+  const kickmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -417,6 +447,7 @@ export const ApiProvider: React.FC<{
     startChat,
     getChat,
     deleteChat,
+    startGroup,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -439,6 +470,7 @@ interface APIContextInterface {
   startChat: ((id: string) => Promise<Response<undefined>>) | null
   getChat: ((id: string) => Promise<Response<unknown>>) | null
   deleteChat: ((id: string) => Promise<Response<undefined>>)| null
+  startGroup: ((name: string, description: string) => Promise<Response<undefined>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -456,5 +488,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   deleteContact: null,
   startChat: null,
   getChat: null,
-  deleteChat: null
+  deleteChat: null,
+  startGroup: null
 });
