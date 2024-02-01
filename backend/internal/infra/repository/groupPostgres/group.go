@@ -30,6 +30,7 @@ func (g *GroupDTO) ToGroup() *model.Group {
 		GroupID:     g.GroupID,
 		Name:        g.Name,
 		Description: g.Description,
+		Creator:     g.Creator,
 	}
 }
 
@@ -39,20 +40,21 @@ func ToGroupDTO(group model.Group) *GroupDTO {
 			GroupID:     group.GroupID,
 			Name:        group.Name,
 			Description: group.Description,
+			Creator:     group.Creator,
 		},
 		CreatedAt: time.Now(),
 	}
 }
 
-func (g *Repository) Create(ctx context.Context, group model.Group) error {
+func (g *Repository) Create(ctx context.Context, group model.Group) (uint64, error) {
 	groupDTO := ToGroupDTO(group)
 
 	result := g.db.WithContext(ctx).Create(groupDTO)
 	if result.Error != nil {
-		return result.Error
+		return 0, result.Error
 	}
 
-	return nil
+	return groupDTO.GroupID, nil
 }
 
 func (g *Repository) Get(ctx context.Context, cmd groupRepo.GetCommand) ([]model.Group, error) {

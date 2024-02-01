@@ -13,7 +13,7 @@ type GetCommand struct {
 
 type Repository interface {
 	Get(ctx context.Context, cmd GetCommand) ([]model.Group, error)
-	Create(ctx context.Context, group model.Group) error
+	Create(ctx context.Context, group model.Group) (uint64, error)
 	Update(ctx context.Context, group model.Group) error
 	Delete(ctx context.Context, cmd GetCommand) error
 }

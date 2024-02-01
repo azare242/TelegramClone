@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	echo "github.com/labstack/echo/v4"
+	"github.com/sirupsen/logrus"
 
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/groupChatRepo"
@@ -42,15 +43,48 @@ func (g *Group) NewGroup(c echo.Context) error {
 		return c.String(http.StatusBadRequest, "group name can not be empty")
 	}
 
-	if err := g.repo.Create(c.Request().Context(), model.Group{
-		Creator:     uint64(creatorID),
+	uCreatorID := uint64(creatorID)
+
+	logrus.Warnln("uc", uCreatorID)
+
+	groupID, err := g.repo.Create(c.Request().Context(), model.Group{
+		Creator:     uCreatorID,
 		Name:        name,
 		Description: c.FormValue("description"),
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if err = g.userGroupRepo.Create(c.Request().Context(), model.UserGroup{
+		GroupID: groupID,
+		UserID:  uCreatorID,
 	}); err != nil {
 		return echo.ErrInternalServerError
 	}
 
 	return c.NoContent(http.StatusCreated)
+}
+
+func (g *Group) GetGroupData(c echo.Context) error {
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	group, users, err := g.userGroupRepo.GetGroupWithUserGroups(c.Request().Context(), groupID)
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(group) == 0 {
+		return c.String(http.StatusNotFound, "no groups found")
+	}
+
+	return c.JSON(http.StatusOK, echo.Map{
+		"group": group,
+		"users": users,
+	})
 }
 
 func (g *Group) DeleteGroup(c echo.Context) error {
@@ -173,13 +207,21 @@ func (g *Group) NewGroupMessage(c echo.Context) error {
 	if err != nil {
 		return echo.ErrUnauthorized
 	}
+	uID := uint64(id)
+
+	userID, err := strconv.ParseUint(c.Param("userid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if userID != uID {
+		return echo.ErrUnauthorized
+	}
 
 	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
 	if err != nil {
 		return echo.ErrBadRequest
 	}
-
-	uID := uint64(id)
 
 	users, err := g.userGroupRepo.Get(c.Request().Context(), userGroupRepo.GetCommand{
 		GroupID: &groupID,
@@ -320,6 +362,7 @@ func (g *Group) NewGroupHandler(gr *echo.Group) {
 	GroupsGroup := gr.Group("/groups")
 
 	GroupsGroup.POST("", g.NewGroup)
+	GroupsGroup.GET("/:groupid", g.GetGroupData)
 	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
 	GroupsGroup.POST("/:groupid", g.AddUserToGroup)
 	GroupsGroup.DELETE("/:groupid/:userid", g.DeleteUserFromGroup)

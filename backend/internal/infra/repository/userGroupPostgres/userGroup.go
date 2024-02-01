@@ -3,9 +3,11 @@ package userGroupPostgres
 import (
 	"backend/internal/domain/model"
 	"backend/internal/domain/repository/userGroupRepo"
+	"backend/internal/infra/repository/groupPostgres"
 	"context"
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Repository struct {
@@ -27,8 +29,8 @@ func New(db *gorm.DB) *Repository {
 func (u *UserGroupDTO) ToUserGroup() *model.UserGroup {
 	return &model.UserGroup{
 		UserGroupID: u.UserGroupID,
-		UserID:  u.UserID,
-		GroupID: u.GroupID,
+		UserID:      u.UserID,
+		GroupID:     u.GroupID,
 	}
 }
 
@@ -36,8 +38,8 @@ func ToUserGroupDTO(userGroup model.UserGroup) *UserGroupDTO {
 	return &UserGroupDTO{
 		UserGroup: model.UserGroup{
 			UserGroupID: userGroup.UserGroupID,
-			UserID:  userGroup.UserID,
-			GroupID: userGroup.GroupID,
+			UserID:      userGroup.UserID,
+			GroupID:     userGroup.GroupID,
 		},
 		CreatedAt: time.Now(),
 	}
@@ -59,13 +61,13 @@ func (r *Repository) Get(ctx context.Context, cmd userGroupRepo.GetCommand) ([]m
 	var condition UserGroupDTO
 
 	if cmd.ID != nil {
-		condition.UserID = *cmd.ID
+		condition.UserGroupID = *cmd.ID
 	}
 	if cmd.GroupID != nil {
 		condition.GroupID = *cmd.GroupID
 	}
 	if cmd.UserID != nil {
-		condition.UserGroupID = *cmd.UserID
+		condition.UserID = *cmd.UserID
 	}
 
 	result := r.db.WithContext(ctx).Where(&condition).Find(&userGroupDTOs)
@@ -109,7 +111,7 @@ func (r *Repository) Delete(ctx context.Context, cmd userGroupRepo.GetCommand) e
 		condition.GroupID = *cmd.GroupID
 	}
 	if cmd.UserID != nil {
-		condition.UserGroupID = *cmd.UserID
+		condition.UserID = *cmd.UserID
 	}
 
 	result := r.db.WithContext(ctx).Where(&condition).Delete(&UserGroupDTO{})
@@ -118,4 +120,19 @@ func (r *Repository) Delete(ctx context.Context, cmd userGroupRepo.GetCommand) e
 	}
 
 	return nil
+}
+
+func (r *Repository) GetGroupWithUserGroups(ctx context.Context, groupID uint64) ([]groupPostgres.GroupDTO, []userGroupRepo.UserGroupDTO, error) {
+	var group []groupPostgres.GroupDTO
+	var userGroups []userGroupRepo.UserGroupDTO
+
+	if err := r.db.WithContext(ctx).Where("group_id = ?", groupID).First(&group).Error; err != nil {
+		return nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).Where("group_id = ?", groupID).Find(&userGroups).Error; err != nil {
+		return nil, nil, err
+	}
+
+	return group, userGroups, nil
 }
