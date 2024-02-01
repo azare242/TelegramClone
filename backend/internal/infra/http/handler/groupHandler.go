@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/gorilla/websocket"
 	echo "github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 
@@ -85,6 +86,59 @@ func (g *Group) GetGroupData(c echo.Context) error {
 		"group": group,
 		"users": users,
 	})
+}
+
+func (g *Group) GetGroupDataWs(c echo.Context) error {
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	for {
+		var requestData struct {
+			Stat string `json:"stat"`
+		}
+
+		err = ws.ReadJSON(&requestData)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return err
+			}
+			break
+		}
+
+		if requestData.Stat == "exit" {
+			break
+		}
+
+		groupID := groupID
+
+		group, users, err := g.userGroupRepo.GetGroupWithUserGroups(c.Request().Context(), groupID)
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		if len(group) == 0 {
+			ws.WriteMessage(websocket.TextMessage, []byte("No groups found"))
+			continue
+		}
+
+		err = ws.WriteJSON(echo.Map{
+			"group": group,
+			"users": users,
+		})
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (g *Group) GetGroups(c echo.Context) error {
@@ -283,6 +337,94 @@ func (g *Group) NewGroupMessage(c echo.Context) error {
 	return c.NoContent(http.StatusCreated)
 }
 
+func (g *Group) NewGroupMessageWs(c echo.Context) error {
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	id, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+	uID := uint64(id)
+
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	for {
+		var incomingMessage struct {
+			UserID         uint64 `json:"userid"`
+			MessageContent string `json:"content"`
+			Stat           string `json:"stat"`
+		}
+
+		err = ws.ReadJSON(&incomingMessage)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return err
+			}
+			break
+		}
+
+		if incomingMessage.Stat == "exit" {
+			break
+		}
+
+		userID := incomingMessage.UserID
+		groupID := groupID
+		messageContent := incomingMessage.MessageContent
+
+		if userID != uID {
+			ws.WriteMessage(websocket.TextMessage, []byte("Unauthorized"))
+			continue
+		}
+
+		users, err := g.userGroupRepo.Get(c.Request().Context(), userGroupRepo.GetCommand{
+			GroupID: &groupID,
+			UserID:  &uID,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		if len(users) == 0 {
+			ws.WriteMessage(websocket.TextMessage, []byte("You are not part of this group"))
+			continue
+		}
+
+		if messageContent == "" {
+			ws.WriteMessage(websocket.TextMessage, []byte("Message body cannot be empty"))
+			continue
+		}
+
+		messageID, err := g.messageRepo.Create(c.Request().Context(), model.Message{
+			Content:  messageContent,
+			ChatID:   groupID,
+			SenderID: uID,
+			Type:     model.TypeGP,
+			IsRead:   "false",
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		if err = g.groupChatRepo.Create(c.Request().Context(), model.GroupChat{
+			GroupID:   groupID,
+			MessageID: messageID,
+		}); err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		ws.WriteMessage(websocket.TextMessage, []byte("Message sent"))
+	}
+
+	return nil
+}
+
 func (g *Group) DeleteGroupMessage(c echo.Context) error {
 	id, err := helper.ValidateJWT(c)
 	if err != nil {
@@ -380,16 +522,98 @@ func (g *Group) GetGroupMessages(c echo.Context) error {
 	return c.JSON(http.StatusOK, messages[:count])
 }
 
+func (g *Group) GetGroupMessagesWs(c echo.Context) error {
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	id, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+	uID := uint64(id)
+
+	groupID, err := strconv.ParseUint(c.Param("groupid"), 10, 64)
+	if err != nil {
+		return echo.ErrBadRequest
+	}
+
+	for {
+		var requestData struct {
+			Count uint64 `json:"count"`
+			Stat  string `json:"stat"`
+		}
+
+		err = ws.ReadJSON(&requestData)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return err
+			}
+			break
+		}
+
+		if requestData.Stat == "exit" {
+			break
+		}
+
+		groupID := groupID
+		count := requestData.Count
+
+		users, err := g.userGroupRepo.Get(c.Request().Context(), userGroupRepo.GetCommand{
+			GroupID: &groupID,
+			UserID:  &uID,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		if len(users) == 0 {
+			ws.WriteMessage(websocket.TextMessage, []byte("You are not part of this group"))
+			continue
+		}
+
+		chatType := model.TypeGP
+
+		messages, err := g.messageRepo.GetDto(c.Request().Context(), messageRepo.GetCommand{
+			ChatID: &groupID,
+			Type:   &chatType,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		sort.Slice(messages, func(i, j int) bool {
+			return messages[i].CreatedAt.After(messages[j].CreatedAt)
+		})
+
+		if count > uint64(len(messages)) {
+			count = uint64(len(messages))
+		}
+
+		err = ws.WriteJSON(messages[:count])
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (g *Group) NewGroupHandler(gr *echo.Group) {
 	GroupsGroup := gr.Group("/groups")
 
 	GroupsGroup.POST("", g.NewGroup)
 	GroupsGroup.GET("/allgroups", g.GetGroups)
 	GroupsGroup.GET("/:groupid", g.GetGroupData)
+	GroupsGroup.GET("/:groupid/ws", g.GetGroupDataWs)
 	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
 	GroupsGroup.POST("/:groupid", g.AddUserToGroup)
 	GroupsGroup.DELETE("/:groupid/:userid", g.DeleteUserFromGroup)
 	GroupsGroup.POST("/:groupid/message/:userid", g.NewGroupMessage)
+	GroupsGroup.GET("/:groupid/message/:userid/ws", g.NewGroupMessageWs)
 	GroupsGroup.DELETE("/:groupid/message/:messageid", g.DeleteGroupMessage)
 	GroupsGroup.GET("/:groupid/message/:count", g.GetGroupMessages)
+	GroupsGroup.GET("/:groupid/message/get/ws", g.GetGroupMessagesWs)
 }
