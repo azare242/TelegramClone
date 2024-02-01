@@ -31,14 +31,13 @@ func NewUser(repo userRepo.Repository, contactRepo contactRepo.Repository) *User
 func (u *User) RegisterUser(c echo.Context) error {
 	password := c.FormValue("password")
 
-	if password == "" || c.FormValue("username") == "" || c.FormValue("phone") == "" || c.FormValue("name") == "" {
+	if password == "" || c.FormValue("username") == "" || c.FormValue("phone") == "" {
 		return c.String(http.StatusBadRequest, "fields can not be empty")
 	}
 
 	passHash := helper.HashData(password)
 
 	req := model.User{
-		Name:         c.FormValue("name"),
 		Username:     c.FormValue("username"),
 		Password:     passHash,
 		Phone:        c.FormValue("phone"),
