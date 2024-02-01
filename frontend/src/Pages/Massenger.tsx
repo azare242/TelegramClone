@@ -18,12 +18,12 @@ const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
       navigate('/ppllss');
     }
 
-    const api = chattype === 'pv' ? getChats : getChats;
+    const api = chattype === 'pv' ? getChats : getGroups;
     async function fetch() {
       const res =
         api === null
           ? { success: false, message: 'unknown error', data: undefined }
-          : await api(true);
+          : await api(false);
 
       if (res.success) {
         console.log(res.data);
