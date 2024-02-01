@@ -118,8 +118,7 @@ export const ApiProvider: React.FC<{
           username: res.data.username,
           biography: res.data.biography,
           image: "",
-          firstName: "",
-          lastName: "",
+          name: res.data.name,
           phone: res.data.phone
         }}
       }

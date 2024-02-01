@@ -25,8 +25,7 @@ export interface NewContactFormValues {
 
 export interface UserInfoFormValues {
   username: string
-  firstName: string
-  lastName: string
+  name: string
   phone: string
   biography: string
 }

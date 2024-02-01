@@ -57,8 +57,7 @@ const SettingsMenu: React.FC<{
     defaultValues: {
       username: userInfo ? userInfo.username : '',
       biography: userInfo ? userInfo.biography : '',
-      firstName: userInfo ? userInfo.firstName : '',
-      lastName: userInfo ? userInfo.lastName : '',
+      name: userInfo ? userInfo.name: '',
       phone: userInfo ? userInfo.phone : '',
     },
   });
@@ -83,6 +82,7 @@ const SettingsMenu: React.FC<{
                       event?: React.BaseSyntheticEvent
                     ) => {
                       setIsPending(true);
+                      console.log(data)
                       event?.preventDefault();
                       const res =
                         updateUser === null
@@ -185,23 +185,23 @@ const SettingsMenu: React.FC<{
               <TextField
                 label={languageConfig.forms.firstName}
                 type={``}
-                {...register('firstName', {
+                {...register('name', {
                   required: languageConfig.forms.errorMessages.firstName,
                 })}
-                error={!!errors.firstName}
+                error={!!errors.name}
                 helperText={
-                  errors.firstName
+                  errors.name
                     ? languageConfig.forms.errorMessages.firstName
                     : ''
                 }
                 disabled={!editing}
               />
-              <TextField
+              {/* <TextField
                 label={languageConfig.forms.lastName}
                 type={``}
                 {...register('lastName')}
                 disabled={!editing}
-              />
+              /> */}
             </div>
             <TextField
               label={languageConfig.forms.phone}
