@@ -330,6 +330,30 @@ export const ApiProvider: React.FC<{
 
 
   }, [jsonWebToken])
+
+
+  const startChat = React.useCallback(async (id: string): Promise<Response<undefined>> => {
+    try {
+      const res = await axios.request({
+        url:`${BASE_URL_HTTP}${API_ROUTES.createChat.path}`,
+        method: API_ROUTES.createChat.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        },
+        data: objectToForm({id: id})
+      })
+
+      if (res.status === 201) {
+        return {success: true, message: "start chat successfully", data: undefined}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+
+  }, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -343,7 +367,8 @@ export const ApiProvider: React.FC<{
     getUserProfile,
     addContact,
     getContacts,
-    deleteContact
+    deleteContact,
+    startChat,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -363,7 +388,7 @@ interface APIContextInterface {
   addContact: ((user_name: string) => Promise<Response<undefined>>) | null
   getContacts: (()=> Promise<Response<unknown>>) | null
   deleteContact: ((id: string) => Promise<Response<undefined>>) | null
-
+  startChat: ((id: string) => Promise<Response<undefined>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -378,5 +403,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   getUserProfile: null,
   addContact: null,
   getContacts: null,
-  deleteContact: null
+  deleteContact: null,
+  startChat: null
 });
