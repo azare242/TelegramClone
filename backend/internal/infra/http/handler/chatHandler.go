@@ -99,11 +99,20 @@ func (ch *Chat) GetChats(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	if len(chats) == 0 {
+	reciverChats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+		ReceiverID: &userid,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	allChats := append(chats, reciverChats...)
+
+	if len(allChats) == 0 {
 		return echo.ErrNotFound
 	}
 
-	return c.JSON(http.StatusOK, chats)
+	return c.JSON(http.StatusOK, allChats)
 }
 
 func (ch *Chat) DeleteChat(c echo.Context) error {

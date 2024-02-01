@@ -87,6 +87,28 @@ func (g *Group) GetGroupData(c echo.Context) error {
 	})
 }
 
+func (g *Group) GetGroups(c echo.Context) error {
+	userID, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+
+	uUserID := uint64(userID)
+
+	groups, err := g.userGroupRepo.Get(c.Request().Context(), userGroupRepo.GetCommand{
+		UserID: &uUserID,
+	})
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	if len(groups) == 0 {
+		return echo.ErrNotFound
+	}
+
+	return c.JSON(http.StatusOK, groups)
+}
+
 func (g *Group) DeleteGroup(c echo.Context) error {
 	creatorID, err := helper.ValidateJWT(c)
 	if err != nil {
@@ -362,6 +384,7 @@ func (g *Group) NewGroupHandler(gr *echo.Group) {
 	GroupsGroup := gr.Group("/groups")
 
 	GroupsGroup.POST("", g.NewGroup)
+	GroupsGroup.GET("/allgroups", g.GetGroups)
 	GroupsGroup.GET("/:groupid", g.GetGroupData)
 	GroupsGroup.DELETE("/:groupid", g.DeleteGroup)
 	GroupsGroup.POST("/:groupid", g.AddUserToGroup)
