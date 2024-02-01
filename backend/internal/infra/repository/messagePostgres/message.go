@@ -77,6 +77,9 @@ func (m *Repository) Get(ctx context.Context, cmd messageRepo.GetCommand) ([]mod
 	if cmd.Type != nil {
 		condition.Type = *cmd.Type
 	}
+	if cmd.IsRead != nil {
+		condition.IsRead = *cmd.IsRead
+	}
 
 	result := m.db.WithContext(ctx).Where(&condition).Find(&messageDTOs)
 	if result.Error != nil {

@@ -108,11 +108,32 @@ func (ch *Chat) GetChats(c echo.Context) error {
 
 	allChats := append(chats, reciverChats...)
 
+	_ = model.Chat{}
+	_ = model.Message{}
+
+	type response struct {
+		Chat          model.Chat `json:"chat"`
+		UnreadMessage int        `json:"unreadMessage"`
+	}
+
 	if len(allChats) == 0 {
 		return echo.ErrNotFound
 	}
 
-	return c.JSON(http.StatusOK, allChats)
+	res := make([]response, len(allChats))
+	cond := "false"
+	for i, v := range allChats {
+		messages, _ := ch.messageRepo.Get(c.Request().Context(), messageRepo.GetCommand{
+			IsRead: &cond,
+			ChatID: &v.ChatID,
+		})
+		res[i] = response{
+			Chat:          v,
+			UnreadMessage: len(messages),
+		}
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
 
 func (ch *Chat) DeleteChat(c echo.Context) error {

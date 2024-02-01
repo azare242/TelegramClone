@@ -11,6 +11,7 @@ type GetCommand struct {
 	ChatID   *uint64
 	SenderID *uint64
 	Type     *model.Type
+	IsRead   *string
 }
 
 type Repository interface {
