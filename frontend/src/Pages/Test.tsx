@@ -14,7 +14,7 @@ const Test = () => {
     >
 
         <Button onClick={async () => {
-            const res = apis.addContact === null ? {success: false, message: "unknown error", data: undefined} : await apis.addContact("momod");
+            const res = apis.getContacts === null ? {success: false, message: "unknown error", data: undefined} : await apis.getContacts();
 
             console.log(res)
         }}

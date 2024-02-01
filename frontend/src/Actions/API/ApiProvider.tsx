@@ -279,6 +279,30 @@ export const ApiProvider: React.FC<{
     return {success: false, message: "unknown error", data: undefined}
 
   }, [jsonWebToken])
+
+  const getContacts = React.useCallback(async (): Promise<Response<unknown>> => {
+    const username = localStorage.getItem("mytel-username")
+    if (!username) return {success: false, message: "unknown error", data: undefined}
+    try {
+      const res = await axios.request({
+        url:`${BASE_URL_HTTP}${API_ROUTES.getContats.path.replace("$1", username)}`,
+        method: API_ROUTES.getContats.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        },
+      })
+
+      if (res.status === 200) {
+        return {success: true, message: "fetch successfully", data: res.data}
+      }
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+
+  }, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -290,7 +314,8 @@ export const ApiProvider: React.FC<{
     getGroups,
     deleteAccount,
     getUserProfile,
-    addContact
+    addContact,
+    getContacts
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -308,6 +333,7 @@ interface APIContextInterface {
   deleteAccount: (() => Promise<Response<undefined>>) | null 
   getUserProfile: ((id: string) => Promise<Response<userProfile>>) | null 
   addContact: ((user_name: string) => Promise<Response<undefined>>) | null
+  getContacts: (()=> Promise<Response<unknown>>) | null
 
 }
 export const APIContext = React.createContext<APIContextInterface>({
@@ -321,5 +347,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   getGroups: null,
   deleteAccount: null,
   getUserProfile: null,
-  addContact: null
+  addContact: null,
+  getContacts: null
 });
