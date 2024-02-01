@@ -426,10 +426,10 @@ export const ApiProvider: React.FC<{
   }, [jsonWebToken])
 
 
-  const getGroupInfo = React.useCallback((id: string): Promise<Response<unknown>> => {}, [jsonWebToken])
-  const deleteGroup = React.useCallback((id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
-  const addmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
-  const kickmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {}, [jsonWebToken])
+  const getGroupInfo = React.useCallback((id: string): Promise<Response<unknown>> => {return {success: false, message: "unknown error", data: undefined}}, [jsonWebToken])
+  const deleteGroup = React.useCallback((id: string): Promise<Response<undefined>> => {return {success: false, message: "unknown error", data: undefined}}, [jsonWebToken])
+  const addmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {return {success: false, message: "unknown error", data: undefined}}, [jsonWebToken])
+  const kickmember = React.useCallback((user_id: string, gp_id: string): Promise<Response<undefined>> => {return {success: false, message: "unknown error", data: undefined}}, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -448,6 +448,10 @@ export const ApiProvider: React.FC<{
     getChat,
     deleteChat,
     startGroup,
+    getGroupInfo,
+    deleteGroup,
+    addmember,
+    kickmember,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -471,6 +475,10 @@ interface APIContextInterface {
   getChat: ((id: string) => Promise<Response<unknown>>) | null
   deleteChat: ((id: string) => Promise<Response<undefined>>)| null
   startGroup: ((name: string, description: string) => Promise<Response<undefined>>) | null
+  getGroupInfo: ((id: string) => Promise<Response<unknown>>) | null
+  deleteGroup: ((id: string) => Promise<Response<undefined>>) | null
+  addmember: ((user_id: string, gp_id: string) => Promise<Response<undefined>>) | null
+  kickmember: ((user_id: string, gp_id: string) => Promise<Response<undefined>>) | null
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -489,5 +497,10 @@ export const APIContext = React.createContext<APIContextInterface>({
   startChat: null,
   getChat: null,
   deleteChat: null,
-  startGroup: null
+  startGroup: null,
+  getGroupInfo: null,
+  deleteGroup:  null,
+  addmember: null,
+  kickmember:  null,
+
 });
