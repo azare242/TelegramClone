@@ -8,78 +8,25 @@ const GroupInfo = () => {
     <div className='flex flex-col rounded-2xl border-blue-500 bg-white/70 backdrop-blur-sm mt-[100px]'>
       <div>
       <Button color="primary">
-        add member
+        add contact
       </Button>
       <Button color="error">
-        Delete Group
+        Delete chat
       </Button>
-      <Button color="error">
-        Leave
-      </Button>
+
       </div>
-      <div className='flex flex-row items-center justify-center p-3 gap-3'>
+      <div className='flex flex-col items-center justify-center p-3 gap-3'>
         <Avatar></Avatar>
-        <Typography>Group Name</Typography>
-      </div>
-      <div className='flex items-center justify-between p-4'>
-        <TextField label={'Search'} color={`primary`} />
-        <IconButton>
-          <Search />
-        </IconButton>
+        <div className='flex flex-col'>
+        </div>
+        <Typography>Username</Typography>
+        <Typography>Name</Typography>
+
+        <Typography>phone number</Typography>
+
       </div>
 
-      <ContactList
-        contactItems={[
-          {
-            id: 1,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 2,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 3,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 4,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 5,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 6,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 7,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-          {
-            id: 8,
-            username: 'Alireza',
-            avatarSrc: '',
-            phone: '+989123456789',
-          },
-        ]}
-      />
+
     </div>
   );
 };
