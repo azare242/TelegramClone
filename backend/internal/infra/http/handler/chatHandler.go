@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 
+	"github.com/gorilla/websocket"
 	echo "github.com/labstack/echo/v4"
 
 	"backend/internal/domain/model"
@@ -23,6 +24,12 @@ func NewUserChat(repo userChatRepo.Repository, messageRepo messageRepo.Repositor
 		messageRepo: messageRepo,
 		repo:        repo,
 	}
+}
+
+var upgrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
 }
 
 func (ch *Chat) NewChat(c echo.Context) error {
@@ -134,6 +141,93 @@ func (ch *Chat) GetChats(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, res)
+}
+
+func (ch *Chat) GetChatsWs(c echo.Context) error {
+	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
+	if err != nil {
+		return err
+	}
+	defer ws.Close()
+
+	id, err := helper.ValidateJWT(c)
+	if err != nil {
+		return echo.ErrUnauthorized
+	}
+	userid := uint64(id)
+
+	sendUpdatedChats := func() error {
+		chats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+			UserID: &userid,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		receiverChats, err := ch.repo.Get(c.Request().Context(), userChatRepo.GetCommand{
+			ReceiverID: &userid,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+
+		allChats := append(chats, receiverChats...)
+
+		type response struct {
+			Chat          model.Chat `json:"chat"`
+			UnreadMessage int        `json:"unreadMessage"`
+		}
+
+		if len(allChats) == 0 {
+			return nil
+		}
+
+		res := make([]response, len(allChats))
+		cond := "false"
+		for i, v := range allChats {
+			messages, _ := ch.messageRepo.Get(c.Request().Context(), messageRepo.GetCommand{
+				IsRead: &cond,
+				ChatID: &v.ChatID,
+			})
+			res[i] = response{
+				Chat:          v,
+				UnreadMessage: len(messages),
+			}
+		}
+
+		return ws.WriteJSON(res)
+	}
+
+	for {
+		err = sendUpdatedChats()
+		if err != nil {
+			return err
+		}
+
+		type msg struct {
+			Message string `json:"message"`
+		}
+		var m msg
+		err = ws.ReadJSON(&m)
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
+				return err
+			}
+			break
+		}
+
+		if m.Message == "new" {
+			err = sendUpdatedChats()
+			if err != nil {
+				return err
+			}
+		}
+		if m.Message == "exit" {
+			break
+		}
+	}
+
+	return nil
 }
 
 func (ch *Chat) DeleteChat(c echo.Context) error {
@@ -308,6 +402,7 @@ func (ch *Chat) NewUserChatHandler(g *echo.Group) {
 
 	chatGroup.POST("", ch.NewChat)
 	chatGroup.GET("", ch.GetChats)
+	chatGroup.GET("/ws", ch.GetChatsWs)
 	chatGroup.GET("/:chatid", ch.GetChat)
 	chatGroup.DELETE("/:chatid", ch.DeleteChat)
 	chatGroup.POST("/:chatid/message", ch.NewChatMessage)
