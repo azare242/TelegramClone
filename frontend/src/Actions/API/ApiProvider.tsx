@@ -29,6 +29,7 @@ export const ApiProvider: React.FC<{
         data: mock ? form : formValuesData 
       })
 
+
       if (res.status === 200) {
         console.log(res.data)
         setJsonWebToken(res.data.token)
@@ -198,6 +199,36 @@ export const ApiProvider: React.FC<{
     }
     return {success: false, message: "unknown error", data: undefined}
   }, [jsonWebToken])
+
+
+
+
+  const deleteAccount = React.useCallback(async (): Promise<Response<undefined>> => {
+
+
+    const userName = localStorage.getItem("mytel-username")
+    if (!userName) return {success: false, message: "Unknown Error", data: undefined}
+    try {
+      const res = await axios.request({
+        url:`${BASE_URL_HTTP}${API_ROUTES.deleteUser.path.replace("$1", userName)}`,
+        method: API_ROUTES.deleteUser.method,
+        headers: {
+          "Authorization": `${jsonWebToken}`
+        },
+      })
+     if (res.status === 200) {
+      setJsonWebToken(null);
+      localStorage.removeItem("mytel-userid")
+      localStorage.removeItem("mytel-username")
+     } 
+      return {success: true, message: "Deleted", data: undefined}
+    } catch (e) {
+      if (e instanceof AxiosError)
+        return {success: false, message: e.response?.data.message, data: undefined}
+      else return {success: false, message: "unknown error", data: undefined}
+    }
+    return {success: false, message: "unknown error", data: undefined}
+  }, [jsonWebToken])
   const context: APIContextInterface = {
     jsonWebToken,
     login,
@@ -207,6 +238,7 @@ export const ApiProvider: React.FC<{
     updateUser,
     getChats,
     getGroups,
+    deleteAccount,
   };
 
   return <APIContext.Provider value={context}>{children}</APIContext.Provider>;
@@ -221,6 +253,7 @@ interface APIContextInterface {
   updateUser: ((form: UserInfoFormValues,image: File, mock?: boolean) => Promise<Response<undefined>>) | null
   getChats: ((mock?: boolean) => Promise<Response<unknown>>) | null
   getGroups: ((mock?: boolean) => Promise<Response<unknown>>) | null
+  deleteAccount: (() => Promise<Response<undefined>>) | null 
 }
 export const APIContext = React.createContext<APIContextInterface>({
   jsonWebToken: null,
@@ -230,5 +263,6 @@ export const APIContext = React.createContext<APIContextInterface>({
   settingsPageInfo: null,
   updateUser: null,
   getChats: null,
-  getGroups: null
+  getGroups: null,
+  deleteAccount: null
 });

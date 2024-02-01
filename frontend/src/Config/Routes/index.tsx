@@ -6,6 +6,7 @@ import Settings from "../../Pages/Settings";
 import Contacts from "../../Pages/Contacts";
 import UserInfo from "../../Components/Info/UserInfo";
 import GroupInfo from "../../Components/Info/GroupInfo";
+import Test from "../../Pages/Test";
 
 export type AppRouteType = {
   path: string;
@@ -63,5 +64,13 @@ export const publicRoutes: AppRouteType[] = [
     path: "group/:id",
     name: "groupinfo",
     element: <GroupInfo/>
+  }
+
+  ,
+  {
+    path: "test",
+    name: "test",
+    element: <Test/>
+    
   }
 ];

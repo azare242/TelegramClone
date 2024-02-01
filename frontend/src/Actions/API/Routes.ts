@@ -13,6 +13,7 @@ interface ApiRoutes {
   updateUser: ApiRoute;
   deleteUser: ApiRoute;
   findUser: ApiRoute;
+  getPfp: ApiRoute;
 
   //CONTACTS ROUTES
   getContats: ApiRoute;
@@ -64,7 +65,10 @@ export const API_ROUTES: ApiRoutes = {
     method: "GET",
     path: `/users?keyword="$1"`,
   },
-
+  getPfp: {
+    method: "GET",
+    path: "/users/pfp/$1"
+  },
   //CONTACTS ROUTES
   getContats: {
     method: "GET",
