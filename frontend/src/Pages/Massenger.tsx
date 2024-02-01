@@ -5,7 +5,7 @@ import { useAPI } from '../Actions/API/useAPI';
 import LoadingInPage from '../Components/Loading/LoadingInPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChatPagePV } from '../Components/Chat/ChatPage';
-import { UserMessage } from '../Components/Message/Message';
+import { OtherUserMessage, UserMessage } from '../Components/Message/Message';
 
 const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
   const { getChats, getGroups } = useAPI();
@@ -50,8 +50,23 @@ const Massenger: React.FC<{ openedChat: boolean }> = ({ openedChat }) => {
         <LoadingInPage />
       )}
       {!openedChat && <div className='container mx-auto p-4 h-full'></div>}
-      {openedChat && <div className='container mx-auto p-4 h-fit'><ChatPagePV userImage='' userName='alireza'>
-        {[]}
+      {openedChat && <div className='container mx-auto p-4 h-full'><ChatPagePV userImage='' userName='alireza'>
+        <UserMessage text="hi"></UserMessage>
+        <UserMessage text="hi"></UserMessage>
+
+        <UserMessage text="hi"></UserMessage>
+        <UserMessage text="hi"></UserMessage>
+        <UserMessage text="hi"></UserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <UserMessage text="hi"></UserMessage>
+        <UserMessage text="hi"></UserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        <OtherUserMessage text='hello'></OtherUserMessage>
+        
         </ChatPagePV></div>}
     </MassengerLayout>
   );

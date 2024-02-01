@@ -14,7 +14,7 @@ const ChatPagePV: React.FC<{userImage: string, userName: string, children: React
     }, [children]); // Scroll to bottom every time children change
   
   return (
-    <div className="container mx-auto p-4 h-full">
+    <div className="container mx-auto p-4 h-[500px]">
       <div className="flex items-center p-4 border-b-2">
         <Avatar alt="User Image" src={userImage} />
         <div className="ml-4">
