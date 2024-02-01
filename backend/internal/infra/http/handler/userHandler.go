@@ -283,11 +283,16 @@ func (u *User) GetUserContacts(c echo.Context) error {
 
 	username := c.Param("username")
 
+	// Fetching user information
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
 		Username: &username,
 	})
 	if err != nil {
 		return echo.ErrInternalServerError
+	}
+
+	if len(users) == 0 {
+		return c.String(http.StatusNotFound, "user not found")
 	}
 
 	contacts, err := u.contactRepo.Get(c.Request().Context(), contactRepo.GetCommand{
@@ -297,7 +302,30 @@ func (u *User) GetUserContacts(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	return c.JSON(http.StatusOK, contacts)
+	contactDetails := make([]struct {
+		ContactInfo model.Contact `json:"contactInfo"`
+		UserInfo    model.User    `json:"userInfo"`
+	}, 0, len(contacts))
+
+	for _, contact := range contacts {
+		contactUser, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
+			ID: &contact.ContactUserID,
+		})
+		if err != nil {
+			return echo.ErrInternalServerError
+		}
+		if len(contactUser) > 0 {
+			contactDetails = append(contactDetails, struct {
+				ContactInfo model.Contact `json:"contactInfo"`
+				UserInfo    model.User    `json:"userInfo"`
+			}{
+				ContactInfo: contact,
+				UserInfo:    contactUser[0],
+			})
+		}
+	}
+
+	return c.JSON(http.StatusOK, contactDetails)
 }
 
 func (u *User) NewUserContact(c echo.Context) error {
@@ -313,9 +341,7 @@ func (u *User) NewUserContact(c echo.Context) error {
 	users, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
 		Username: &username,
 	})
-	if err != nil {
-		return echo.ErrInternalServerError
-	}
+
 	contactUsers, err := u.repo.Get(c.Request().Context(), userRepo.GetCommand{
 		Username: &contactUsername,
 	})

@@ -64,6 +64,9 @@ func (c *Repository) Get(ctx context.Context, cmd contactRepo.GetCommand) ([]mod
 	if cmd.ID != nil {
 		condition.ContactID = *cmd.ID
 	}
+	if cmd.ContactUserID != nil {
+		condition.ContactUserID = *cmd.ContactUserID
+	}
 	if cmd.UserID != nil {
 		condition.UserID = *cmd.UserID
 	}

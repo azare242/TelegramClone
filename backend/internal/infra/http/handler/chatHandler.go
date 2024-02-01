@@ -115,9 +115,6 @@ func (ch *Chat) GetChats(c echo.Context) error {
 
 	allChats := append(chats, reciverChats...)
 
-	_ = model.Chat{}
-	_ = model.Message{}
-
 	type response struct {
 		Chat          model.Chat `json:"chat"`
 		UnreadMessage int        `json:"unreadMessage"`
